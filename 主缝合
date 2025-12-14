@@ -202,7 +202,7 @@ local fovEnabled = false
 local fovConnection
 
 GeneralSection:Slider({
-    Title = "视野倍率",
+    Title = "视野",
     Desc = "FOVMultiplier",
     Step = 0.1,
     Value = {Min = 0.1, Max = 5, Default = 1},
@@ -245,7 +245,7 @@ local zoomDistanceEnabled = false
 local zoomDistanceConnection
 
 GeneralSection:Slider({
-    Title = "缩放倍率",
+    Title = "缩放",
     Desc = "ZoomDistanceMultiplier",
     Step = 0.1,
     Value = {Min = 0.1, Max = 10, Default = 1},
@@ -298,7 +298,7 @@ local walkSpeedEnabled = false
 local walkSpeedConnection2
 
 GeneralSection:Slider({
-    Title = "走路倍率",
+    Title = "速度",
     Desc = "WalkSpeedMultiplier",
     Step = 0.1,
     Value = {Min = 0.1, Max = 10, Default = 1},
@@ -308,7 +308,7 @@ GeneralSection:Slider({
 })
 
 GeneralSection:Toggle({
-    Title = "走路开关",
+    Title = "速度开关",
     Value = false,
     Callback = function(state)
         walkSpeedEnabled = state
@@ -341,7 +341,7 @@ local jumpEnabled = false
 local jumpConnection
 
 GeneralSection:Slider({
-    Title = "跳跃倍率",
+    Title = "跳高",
     Desc = "JumpMultiplier",
     Step = 0.1,
     Value = {Min = 1, Max = 5, Default = 1},
@@ -351,7 +351,7 @@ GeneralSection:Slider({
 })
 
 GeneralSection:Toggle({
-    Title = "跳跃开关",
+    Title = "跳高开关",
     Value = false,
     Callback = function(state)
         jumpEnabled = state
@@ -386,7 +386,7 @@ local gravityEnabled = false
 local gravityConnection
 
 GeneralSection:Slider({
-    Title = "重力倍率",
+    Title = "重力",
     Desc = "GravityMultiplier",
     Step = 0.1,
     Value = {Min = 0.1, Max = 5, Default = 1},
@@ -427,7 +427,7 @@ local healthMaxEnabled = false
 local healthMaxConnection
 
 GeneralSection:Slider({
-    Title = "最大血量倍率",
+    Title = "最大血量",
     Desc = "MaxHealthMultiplier",
     Step = 0.1,
     Value = {Min = 0.1, Max = 10, Default = 1},
@@ -475,7 +475,7 @@ local healthCurrentEnabled = false
 local healthCurrentConnection
 
 GeneralSection:Slider({
-    Title = "当前血量倍率",
+    Title = "当前血量",
     Desc = "CurrentHealthMultiplier",
     Step = 0.1,
     Value = {Min = 0.1, Max = 10, Default = 1},
