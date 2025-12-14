@@ -197,173 +197,325 @@ DefaultTab:Paragraph({
 
 local GeneralSection = firstTab:Section({Title = "基础设置", Opened = false, Icon = "lucide:align-horizontal-distribute-center"})
 
-GeneralSection:Slider({
-    Title = "视野FOV",
-    Desc = "极小部分服务器无法使用",
-    Step = 1,
-    Value = {
-        Min = 10,
-        Max = 220,
-        Default = Workspace.CurrentCamera.FieldOfView
-    },
-    Callback = function(FOV)
-        spawn(function() 
-            while task.wait() do 
-                Workspace.CurrentCamera.FieldOfView = FOV
-            end 
-        end)
-    end
-})
+local fovMultiplier = 1
+local fovEnabled = false
+local fovConnection
 
 GeneralSection:Slider({
-    Title = "最大视角缩放距离",
-    Desc = "调整后手动缩放",
-    Step = 0.5,
-    Value = {
-        Min = 0.5,
-        Max = 1000000,
-        Default = 100
-    },
-    Callback = function(Distance)
-        local player = game.Players.LocalPlayer
-        if player then
-            player.CameraMaxZoomDistance = Distance
-            player.CameraMinZoomDistance = 0.5
+    Title = "视野倍率",
+    Desc = "FOVMultiplier",
+    Step = 0.1,
+    Value = {Min = 0.1, Max = 5, Default = 1},
+    Callback = function(multiplier)
+        fovMultiplier = multiplier
+        if fovEnabled then
+            local baseFOV = 70
+            Workspace.CurrentCamera.FieldOfView = baseFOV * fovMultiplier
         end
     end
 })
 
-local walkSpeedConnection
-GeneralSection:Slider({
-    Title = "走路速度",
-    Desc = "WalkSpeed",
-    Step = 1,
-    Value = {
-        Min = 16,
-        Max = 500,
-        Default = game.Players.LocalPlayer.Character.Humanoid.WalkSpeed
-    },
-    Callback = function(Speed)
-        if walkSpeedConnection then
-            walkSpeedConnection:Disconnect()
+GeneralSection:Toggle({
+    Title = "视野开关",
+    Value = false,
+    Callback = function(state)
+        fovEnabled = state
+        if state then
+            if fovConnection then
+                fovConnection:Disconnect()
+            end
+            fovConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if fovEnabled then
+                    local baseFOV = 70
+                    Workspace.CurrentCamera.FieldOfView = baseFOV * fovMultiplier
+                end
+            end)
+        else
+            if fovConnection then
+                fovConnection:Disconnect()
+                fovConnection = nil
+            end
+            Workspace.CurrentCamera.FieldOfView = 70
         end
-        walkSpeedConnection = game:GetService("RunService").Heartbeat:Connect(function()
+    end
+})
+
+local zoomDistanceMultiplier = 1
+local zoomDistanceEnabled = false
+local zoomDistanceConnection
+
+GeneralSection:Slider({
+    Title = "缩放倍率",
+    Desc = "ZoomDistanceMultiplier",
+    Step = 0.1,
+    Value = {Min = 0.1, Max = 10, Default = 1},
+    Callback = function(multiplier)
+        zoomDistanceMultiplier = multiplier
+        if zoomDistanceEnabled then
+            local player = game.Players.LocalPlayer
+            if player then
+                player.CameraMaxZoomDistance = 100 * zoomDistanceMultiplier
+                player.CameraMinZoomDistance = 0.5
+            end
+        end
+    end
+})
+
+GeneralSection:Toggle({
+    Title = "缩放开关",
+    Value = false,
+    Callback = function(state)
+        zoomDistanceEnabled = state
+        if state then
+            if zoomDistanceConnection then
+                zoomDistanceConnection:Disconnect()
+            end
+            zoomDistanceConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if zoomDistanceEnabled then
+                    local player = game.Players.LocalPlayer
+                    if player then
+                        player.CameraMaxZoomDistance = 100 * zoomDistanceMultiplier
+                        player.CameraMinZoomDistance = 0.5
+                    end
+                end
+            end)
+        else
+            if zoomDistanceConnection then
+                zoomDistanceConnection:Disconnect()
+                zoomDistanceConnection = nil
+            end
+            local player = game.Players.LocalPlayer
+            if player then
+                player.CameraMaxZoomDistance = 100
+                player.CameraMinZoomDistance = 0.5
+            end
+        end
+    end
+})
+
+local walkSpeedMultiplier = 1
+local walkSpeedEnabled = false
+local walkSpeedConnection2
+
+GeneralSection:Slider({
+    Title = "走路倍率",
+    Desc = "WalkSpeedMultiplier",
+    Step = 0.1,
+    Value = {Min = 0.1, Max = 10, Default = 1},
+    Callback = function(multiplier)
+        walkSpeedMultiplier = multiplier
+    end
+})
+
+GeneralSection:Toggle({
+    Title = "走路开关",
+    Value = false,
+    Callback = function(state)
+        walkSpeedEnabled = state
+        if state then
+            if walkSpeedConnection2 then
+                walkSpeedConnection2:Disconnect()
+            end
+            walkSpeedConnection2 = game:GetService("RunService").Heartbeat:Connect(function()
+                local character = game.Players.LocalPlayer.Character
+                if character and character:FindFirstChildOfClass("Humanoid") and walkSpeedEnabled then
+                    local baseSpeed = 16
+                    character.Humanoid.WalkSpeed = baseSpeed * walkSpeedMultiplier
+                end
+            end)
+        else
+            if walkSpeedConnection2 then
+                walkSpeedConnection2:Disconnect()
+                walkSpeedConnection2 = nil
+            end
             local character = game.Players.LocalPlayer.Character
             if character and character:FindFirstChildOfClass("Humanoid") then
-                character.Humanoid.WalkSpeed = Speed
+                character.Humanoid.WalkSpeed = 16
             end
-        end)
+        end
     end
 })
 
+local jumpPowerMultiplier = 1
+local jumpEnabled = false
+local jumpConnection
+
 GeneralSection:Slider({
-    Title = "跳跃高度",
-    Desc = "JumpPower",
-    Value = {
-        Min = 0,
-        Max = 2000,
-        Default = game.Players.LocalPlayer.Character.Humanoid.JumpPower
-    },
-    Callback = function(Jump)
-        local plr = game.Players.LocalPlayer
-        local originalJump = 50
-        local currentJump = Jump
-        
-        local function updateJump()
-            if plr.Character and plr.Character:FindFirstChildOfClass("Humanoid") then
-                local humanoid = plr.Character:FindFirstChildOfClass("Humanoid")
-                if humanoid.JumpPower ~= currentJump then
-                    humanoid.JumpPower = currentJump
-                    humanoid.JumpHeight = currentJump / 7  
+    Title = "跳跃倍率",
+    Desc = "JumpMultiplier",
+    Step = 0.1,
+    Value = {Min = 1, Max = 5, Default = 1},
+    Callback = function(multiplier)
+        jumpPowerMultiplier = multiplier
+    end
+})
+
+GeneralSection:Toggle({
+    Title = "跳跃开关",
+    Value = false,
+    Callback = function(state)
+        jumpEnabled = state
+        if state then
+            if jumpConnection then
+                jumpConnection:Disconnect()
+            end
+            jumpConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                local character = game.Players.LocalPlayer.Character
+                if character and character:FindFirstChildOfClass("Humanoid") and jumpEnabled then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    humanoid.JumpPower = 50 * jumpPowerMultiplier
+                    humanoid.JumpHeight = (50 * jumpPowerMultiplier) / 7
                 end
+            end)
+        else
+            if jumpConnection then
+                jumpConnection:Disconnect()
+                jumpConnection = nil
+            end
+            local character = game.Players.LocalPlayer.Character
+            if character and character:FindFirstChildOfClass("Humanoid") then
+                character.Humanoid.JumpPower = 50
+                character.Humanoid.JumpHeight = 50 / 7
             end
         end
-        
-        local function resetJump()
-            if plr.Character and plr.Character:FindFirstChildOfClass("Humanoid") then
-                local humanoid = plr.Character:FindFirstChildOfClass("Humanoid")
-                humanoid.JumpPower = originalJump
-                humanoid.JumpHeight = originalJump / 7
+    end
+})
+
+local gravityMultiplier = 1
+local gravityEnabled = false
+local gravityConnection
+
+GeneralSection:Slider({
+    Title = "重力倍率",
+    Desc = "GravityMultiplier",
+    Step = 0.1,
+    Value = {Min = 0.1, Max = 5, Default = 1},
+    Callback = function(multiplier)
+        gravityMultiplier = multiplier
+        if gravityEnabled then
+            game.Workspace.Gravity = 196.2 * gravityMultiplier
+        end
+    end
+})
+
+GeneralSection:Toggle({
+    Title = "重力开关",
+    Value = false,
+    Callback = function(state)
+        gravityEnabled = state
+        if state then
+            if gravityConnection then
+                gravityConnection:Disconnect()
+            end
+            gravityConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if gravityEnabled then
+                    game.Workspace.Gravity = 196.2 * gravityMultiplier
+                end
+            end)
+        else
+            if gravityConnection then
+                gravityConnection:Disconnect()
+                gravityConnection = nil
+            end
+            game.Workspace.Gravity = 196.2
+        end
+    end
+})
+
+local healthMaxMultiplier = 1
+local healthMaxEnabled = false
+local healthMaxConnection
+
+GeneralSection:Slider({
+    Title = "最大血量倍率",
+    Desc = "MaxHealthMultiplier",
+    Step = 0.1,
+    Value = {Min = 0.1, Max = 10, Default = 1},
+    Callback = function(multiplier)
+        healthMaxMultiplier = multiplier
+        if healthMaxEnabled then
+            local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then 
+                humanoid.MaxHealth = 100 * healthMaxMultiplier
             end
         end
-        
-        currentJump = Jump
-        updateJump()
-        
-        plr.CharacterAdded:Connect(function(char)
-            char:WaitForChild("Humanoid")
-            wait(0.5)
-            updateJump()
-        end)
     end
 })
 
-GeneralSection:Slider({
-    Title = "重力设置",
-    Desc = "Gravity",
-    Step = 1,
-    Value = {
-        Min = 1,
-        Max = 5000,
-        Default = game.Workspace.Gravity
-    },
-    Callback = function(GravityValue)
-        game.Workspace.Gravity = GravityValue
-    end
-})
-
-local healthSettings = {max = 100, current = 100}
-
-GeneralSection:Slider({
-    Title = "最大血量",
-    Desc = "MaxHealth",
-    Step = 10,
-    Value = {
-        Min = 10, 
-        Max = 100000, 
-        Default = 100
-    },
-    Callback = function(value)
-        local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-        if humanoid then 
-            humanoid.MaxHealth = value 
-        end
-        
-        game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
-            wait(1)
-            local newHumanoid = char:FindFirstChildOfClass("Humanoid")
-            if newHumanoid then
-                newHumanoid.MaxHealth = value
+GeneralSection:Toggle({
+    Title = "最大血量开关",
+    Value = false,
+    Callback = function(state)
+        healthMaxEnabled = state
+        if state then
+            if healthMaxConnection then
+                healthMaxConnection:Disconnect()
             end
-        end)
-        
-        WindUI:Notify({
-            Title = "最大血量",
-            Content = "已设置为: " .. value,
-            Duration = 3
-        })
+            healthMaxConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                local character = game.Players.LocalPlayer.Character
+                if character and character:FindFirstChildOfClass("Humanoid") and healthMaxEnabled then
+                    character.Humanoid.MaxHealth = 100 * healthMaxMultiplier
+                end
+            end)
+        else
+            if healthMaxConnection then
+                healthMaxConnection:Disconnect()
+                healthMaxConnection = nil
+            end
+            local character = game.Players.LocalPlayer.Character
+            if character and character:FindFirstChildOfClass("Humanoid") then
+                character.Humanoid.MaxHealth = 100
+            end
+        end
     end
 })
+
+local healthCurrentMultiplier = 1
+local healthCurrentEnabled = false
+local healthCurrentConnection
 
 GeneralSection:Slider({
-    Title = "当前血量",
-    Step = 10,
-    Value = {Min = 1, Max = 100000, Default = 100},
-    Callback = function(value)
-        healthSettings.current = math.min(value, healthSettings.max)
-        local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-        if humanoid then humanoid.Health = healthSettings.current end
+    Title = "当前血量倍率",
+    Desc = "CurrentHealthMultiplier",
+    Step = 0.1,
+    Value = {Min = 0.1, Max = 10, Default = 1},
+    Callback = function(multiplier)
+        healthCurrentMultiplier = multiplier
+        if healthCurrentEnabled then
+            local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then 
+                local maxHealth = humanoid.MaxHealth
+                humanoid.Health = maxHealth * healthCurrentMultiplier
+            end
+        end
     end
 })
 
-game.Players.LocalPlayer.CharacterAdded:Connect(function(char)
-    wait(0.5)
-    local humanoid = char:FindFirstChildOfClass("Humanoid")
-    if humanoid then
-        humanoid.MaxHealth = healthSettings.max
-        humanoid.Health = healthSettings.current
+GeneralSection:Toggle({
+    Title = "当前血量开关",
+    Value = false,
+    Callback = function(state)
+        healthCurrentEnabled = state
+        if state then
+            if healthCurrentConnection then
+                healthCurrentConnection:Disconnect()
+            end
+            healthCurrentConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                local character = game.Players.LocalPlayer.Character
+                if character and character:FindFirstChildOfClass("Humanoid") and healthCurrentEnabled then
+                    local humanoid = character:FindFirstChildOfClass("Humanoid")
+                    local maxHealth = humanoid.MaxHealth
+                    humanoid.Health = maxHealth * healthCurrentMultiplier
+                end
+            end)
+        else
+            if healthCurrentConnection then
+                healthCurrentConnection:Disconnect()
+                healthCurrentConnection = nil
+            end
+        end
     end
-end)
+})
 
 GeneralSection:Button({
     Title = "FPS显示",
