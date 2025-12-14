@@ -190,9 +190,8 @@ infoSection:Paragraph({
 })
 
 DefaultTab:Paragraph({
-    Title = "此脚本为半缝合",
+    Title = "关于",
     Desc = "随便做的请勿拿别的半缝合来对比\n感谢支持并使用挽脚本",
-    Thumbnail = "https://raw.githubusercontent.com/mtaskhh/script/refs/heads/Other/Image_1760363794049.jpg",
     ThumbnailSize = 190
 })
 
