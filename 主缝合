@@ -195,22 +195,35 @@ DefaultTab:Paragraph({
     ThumbnailSize = 190
 })
 
-local GeneralSection = firstTab:Section({Title = "基础设置", Opened = false, Icon = "lucide:align-horizontal-distribute-center"})
+DefaultTab:Button({
+    Title = "重进", 
+    Desc = "重新进服务器",
+    Callback = function()
+game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer)
+if not pcall(function()
+    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer)
+end) then
+    game:GetService("TeleportService"):Teleport(game.PlaceId)
+end
+    end
+})
 
-local fovMultiplier = 1
+local GeneralSection = firstTab:Section({Title = "基础设置", Opened = true, Icon = "lucide:align-horizontal-distribute-center"})
+
+local fovValue = Workspace.CurrentCamera.FieldOfView
 local fovEnabled = false
 local fovConnection
 
 GeneralSection:Slider({
     Title = "视野",
-    Desc = "FOVMultiplier",
-    Step = 0.1,
-    Value = {Min = 0.1, Max = 5, Default = 1},
-    Callback = function(multiplier)
-        fovMultiplier = multiplier
+    Desc = "FieldOfView",
+    Step = 1,
+    Value = {Min = 10, Max = 180, Default = Workspace.CurrentCamera.FieldOfView},
+    Input = true,
+    Callback = function(value)
+        fovValue = value
         if fovEnabled then
-            local baseFOV = 70
-            Workspace.CurrentCamera.FieldOfView = baseFOV * fovMultiplier
+            Workspace.CurrentCamera.FieldOfView = fovValue
         end
     end
 })
@@ -226,8 +239,7 @@ GeneralSection:Toggle({
             end
             fovConnection = game:GetService("RunService").Heartbeat:Connect(function()
                 if fovEnabled then
-                    local baseFOV = 70
-                    Workspace.CurrentCamera.FieldOfView = baseFOV * fovMultiplier
+                    Workspace.CurrentCamera.FieldOfView = fovValue
                 end
             end)
         else
@@ -240,21 +252,22 @@ GeneralSection:Toggle({
     end
 })
 
-local zoomDistanceMultiplier = 1
+local zoomDistance = 100
 local zoomDistanceEnabled = false
 local zoomDistanceConnection
 
 GeneralSection:Slider({
-    Title = "缩放",
-    Desc = "ZoomDistanceMultiplier",
-    Step = 0.1,
-    Value = {Min = 0.1, Max = 10, Default = 1},
-    Callback = function(multiplier)
-        zoomDistanceMultiplier = multiplier
+    Title = "视角缩放距离",
+    Desc = "CameraZoom",
+    Step = 0.5,
+    Value = {Min = 0.5, Max = 1000000, Default = 100},
+    Input = true,
+    Callback = function(distance)
+        zoomDistance = distance
         if zoomDistanceEnabled then
             local player = game.Players.LocalPlayer
             if player then
-                player.CameraMaxZoomDistance = 100 * zoomDistanceMultiplier
+                player.CameraMaxZoomDistance = zoomDistance
                 player.CameraMinZoomDistance = 0.5
             end
         end
@@ -274,7 +287,7 @@ GeneralSection:Toggle({
                 if zoomDistanceEnabled then
                     local player = game.Players.LocalPlayer
                     if player then
-                        player.CameraMaxZoomDistance = 100 * zoomDistanceMultiplier
+                        player.CameraMaxZoomDistance = zoomDistance
                         player.CameraMinZoomDistance = 0.5
                     end
                 end
@@ -293,17 +306,18 @@ GeneralSection:Toggle({
     end
 })
 
-local walkSpeedMultiplier = 1
+local walkSpeed = 16
 local walkSpeedEnabled = false
-local walkSpeedConnection2
+local walkSpeedConnection
 
 GeneralSection:Slider({
-    Title = "速度",
-    Desc = "WalkSpeedMultiplier",
-    Step = 0.1,
-    Value = {Min = 0.1, Max = 10, Default = 1},
-    Callback = function(multiplier)
-        walkSpeedMultiplier = multiplier
+    Title = "步行速度",
+    Desc = "WalkSpeed",
+    Step = 1,
+    Value = {Min = 1, Max = 400, Default = 16},
+    Input = true,
+    Callback = function(speed)
+        walkSpeed = speed
     end
 })
 
@@ -313,20 +327,19 @@ GeneralSection:Toggle({
     Callback = function(state)
         walkSpeedEnabled = state
         if state then
-            if walkSpeedConnection2 then
-                walkSpeedConnection2:Disconnect()
+            if walkSpeedConnection then
+                walkSpeedConnection:Disconnect()
             end
-            walkSpeedConnection2 = game:GetService("RunService").Heartbeat:Connect(function()
+            walkSpeedConnection = game:GetService("RunService").Heartbeat:Connect(function()
                 local character = game.Players.LocalPlayer.Character
                 if character and character:FindFirstChildOfClass("Humanoid") and walkSpeedEnabled then
-                    local baseSpeed = 16
-                    character.Humanoid.WalkSpeed = baseSpeed * walkSpeedMultiplier
+                    character.Humanoid.WalkSpeed = walkSpeed
                 end
             end)
         else
-            if walkSpeedConnection2 then
-                walkSpeedConnection2:Disconnect()
-                walkSpeedConnection2 = nil
+            if walkSpeedConnection then
+                walkSpeedConnection:Disconnect()
+                walkSpeedConnection = nil
             end
             local character = game.Players.LocalPlayer.Character
             if character and character:FindFirstChildOfClass("Humanoid") then
@@ -336,17 +349,18 @@ GeneralSection:Toggle({
     end
 })
 
-local jumpPowerMultiplier = 1
+local jumpPower = 50
 local jumpEnabled = false
 local jumpConnection
 
 GeneralSection:Slider({
-    Title = "跳高",
-    Desc = "JumpMultiplier",
-    Step = 0.1,
-    Value = {Min = 1, Max = 5, Default = 1},
-    Callback = function(multiplier)
-        jumpPowerMultiplier = multiplier
+    Title = "跳跃高度",
+    Desc = "JumpPower",
+    Step = 1,
+    Value = {Min = 0, Max = 2000, Default = 50},
+    Input = true,
+    Callback = function(power)
+        jumpPower = power
     end
 })
 
@@ -363,8 +377,8 @@ GeneralSection:Toggle({
                 local character = game.Players.LocalPlayer.Character
                 if character and character:FindFirstChildOfClass("Humanoid") and jumpEnabled then
                     local humanoid = character:FindFirstChildOfClass("Humanoid")
-                    humanoid.JumpPower = 50 * jumpPowerMultiplier
-                    humanoid.JumpHeight = (50 * jumpPowerMultiplier) / 7
+                    humanoid.JumpPower = jumpPower
+                    humanoid.JumpHeight = jumpPower / 7
                 end
             end)
         else
@@ -381,19 +395,20 @@ GeneralSection:Toggle({
     end
 })
 
-local gravityMultiplier = 1
+local gravityValue = game.Workspace.Gravity
 local gravityEnabled = false
 local gravityConnection
 
 GeneralSection:Slider({
-    Title = "重力",
-    Desc = "GravityMultiplier",
-    Step = 0.1,
-    Value = {Min = 0.1, Max = 5, Default = 1},
-    Callback = function(multiplier)
-        gravityMultiplier = multiplier
+    Title = "重力设置（默认196.2 调高起不了身）",
+    Desc = "Gravity",
+    Step = 1,
+    Value = {Min = 1, Max = 2000, Default = game.Workspace.Gravity},
+    Input = true,
+    Callback = function(value)
+        gravityValue = value
         if gravityEnabled then
-            game.Workspace.Gravity = 196.2 * gravityMultiplier
+            game.Workspace.Gravity = gravityValue
         end
     end
 })
@@ -409,7 +424,7 @@ GeneralSection:Toggle({
             end
             gravityConnection = game:GetService("RunService").Heartbeat:Connect(function()
                 if gravityEnabled then
-                    game.Workspace.Gravity = 196.2 * gravityMultiplier
+                    game.Workspace.Gravity = gravityValue
                 end
             end)
         else
@@ -422,21 +437,22 @@ GeneralSection:Toggle({
     end
 })
 
-local healthMaxMultiplier = 1
+local healthMaxValue = 100
 local healthMaxEnabled = false
 local healthMaxConnection
 
 GeneralSection:Slider({
     Title = "最大血量",
-    Desc = "MaxHealthMultiplier",
-    Step = 0.1,
-    Value = {Min = 0.1, Max = 10, Default = 1},
-    Callback = function(multiplier)
-        healthMaxMultiplier = multiplier
+    Desc = "MaxHealth",
+    Step = 1,
+    Value = {Min = 1, Max = 10000, Default = 100},
+    Input = true,
+    Callback = function(value)
+        healthMaxValue = value
         if healthMaxEnabled then
             local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
             if humanoid then 
-                humanoid.MaxHealth = 100 * healthMaxMultiplier
+                humanoid.MaxHealth = healthMaxValue
             end
         end
     end
@@ -454,7 +470,7 @@ GeneralSection:Toggle({
             healthMaxConnection = game:GetService("RunService").Heartbeat:Connect(function()
                 local character = game.Players.LocalPlayer.Character
                 if character and character:FindFirstChildOfClass("Humanoid") and healthMaxEnabled then
-                    character.Humanoid.MaxHealth = 100 * healthMaxMultiplier
+                    character.Humanoid.MaxHealth = healthMaxValue
                 end
             end)
         else
@@ -470,22 +486,22 @@ GeneralSection:Toggle({
     end
 })
 
-local healthCurrentMultiplier = 1
+local healthCurrentValue = 100
 local healthCurrentEnabled = false
 local healthCurrentConnection
 
 GeneralSection:Slider({
     Title = "当前血量",
-    Desc = "CurrentHealthMultiplier",
-    Step = 0.1,
-    Value = {Min = 0.1, Max = 10, Default = 1},
-    Callback = function(multiplier)
-        healthCurrentMultiplier = multiplier
+    Desc = "CurrentHealth",
+    Step = 1,
+    Value = {Min = 1, Max = 10000, Default = 100},
+    Input = true,
+    Callback = function(value)
+        healthCurrentValue = value
         if healthCurrentEnabled then
             local humanoid = game.Players.LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
             if humanoid then 
-                local maxHealth = humanoid.MaxHealth
-                humanoid.Health = maxHealth * healthCurrentMultiplier
+                humanoid.Health = healthCurrentValue
             end
         end
     end
@@ -503,9 +519,7 @@ GeneralSection:Toggle({
             healthCurrentConnection = game:GetService("RunService").Heartbeat:Connect(function()
                 local character = game.Players.LocalPlayer.Character
                 if character and character:FindFirstChildOfClass("Humanoid") and healthCurrentEnabled then
-                    local humanoid = character:FindFirstChildOfClass("Humanoid")
-                    local maxHealth = humanoid.MaxHealth
-                    humanoid.Health = maxHealth * healthCurrentMultiplier
+                    character.Humanoid.Health = healthCurrentValue
                 end
             end)
         else
@@ -516,6 +530,8 @@ GeneralSection:Toggle({
         end
     end
 })
+
+GeneralSection:Divider()
 
 GeneralSection:Button({
     Title = "FPS显示",
@@ -554,254 +570,13 @@ GeneralSection:Button({
             local currentTime = tick()
             if currentTime - lastUpdate >= 0.1 then
                 local fps = math.floor(1 / RunService.Heartbeat:Wait())
-                hue = (hue + 0.05) % 1  
+                hue = (hue + 0.005) % 1  
                 local color = Color3.fromHSV(hue, 1, 1)
                 textLabel.Text = "FPS: " .. fps
                 textLabel.TextColor3 = color
                 lastUpdate = currentTime
             end
         end)
-    end
-})
-
-GeneralSection:Button({
-    Title = "飞车",
-    Desc = "加载飞车脚本(自然灾害会扣血)",
-    Callback = function()
-local StarterGui = game:GetService("StarterGui")
-
-local ScreenGui = Instance.new("ScreenGui")
-local MainFrame = Instance.new("Frame")
-local Title = Instance.new("TextLabel")
-local InnerFrame = Instance.new("Frame")
-local SpeedTextBox = Instance.new("TextBox")
-local DecreaseButton = Instance.new("TextButton")
-local IncreaseButton = Instance.new("TextButton")
-local FlyButton = Instance.new("TextButton")
-local DestroyButton = Instance.new("TextButton")
-local UIGradient = Instance.new("UIGradient")
-local UICorner = Instance.new("UICorner")
-local UIStroke = Instance.new("UIStroke")
-
-ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-ScreenGui.ResetOnSpawn = false
-
-MainFrame.Parent = ScreenGui
-MainFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-MainFrame.Position = UDim2.new(0.3, 0, 0.5, -100)
-MainFrame.Size = UDim2.new(0, 200, 0, 190)
-MainFrame.Active = true
-MainFrame.Draggable = true
-
-UIStroke.Parent = MainFrame
-UIStroke.Color = Color3.fromRGB(0, 0, 0)
-UIStroke.Thickness = 2
-
-Title.Parent = MainFrame
-Title.BackgroundTransparency = 1
-Title.Size = UDim2.new(1, 0, 0.2, 0)
-Title.Font = Enum.Font.GothamBold
-Title.Text = "飞车脚本"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-Title.TextScaled = true
-
-InnerFrame.Parent = MainFrame
-InnerFrame.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-InnerFrame.Size = UDim2.new(1, 0, 0.6, 0)
-InnerFrame.Position = UDim2.new(0, 0, 0.2, 0)
-
-SpeedTextBox.Parent = InnerFrame
-SpeedTextBox.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-SpeedTextBox.Position = UDim2.new(0.5, -25, 0.1, 0)
-SpeedTextBox.Size = UDim2.new(0, 50, 0, 30)
-SpeedTextBox.Font = Enum.Font.Gotham
-SpeedTextBox.Text = "1"
-SpeedTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-SpeedTextBox.TextScaled = true
-SpeedTextBox.PlaceholderText = "速度"
-
-DecreaseButton.Parent = InnerFrame
-DecreaseButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-DecreaseButton.Size = UDim2.new(0, 50, 0, 30)
-DecreaseButton.Position = UDim2.new(0.1, 0, 0.1, 0)
-DecreaseButton.Font = Enum.Font.Gotham
-DecreaseButton.Text = "-"
-DecreaseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-DecreaseButton.TextScaled = true
-
-IncreaseButton.Parent = InnerFrame
-IncreaseButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-IncreaseButton.Size = UDim2.new(0, 50, 0, 30)
-IncreaseButton.Position = UDim2.new(0.8, -30, 0.1, 0)
-IncreaseButton.Font = Enum.Font.Gotham
-IncreaseButton.Text = "+"
-IncreaseButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-IncreaseButton.TextScaled = true
-
-FlyButton.Parent = InnerFrame
-FlyButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-FlyButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-FlyButton.Position = UDim2.new(0.1, 0, 0.40, 0)
-FlyButton.Font = Enum.Font.GothamBold
-FlyButton.Text = "飞行"
-FlyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-FlyButton.TextScaled = true
-
-DestroyButton.Parent = InnerFrame
-DestroyButton.BackgroundColor3 = Color3.fromRGB(80, 80, 80)
-DestroyButton.Size = UDim2.new(0.8, 0, 0.2, 0)
-DestroyButton.Position = UDim2.new(0.1, 0, 0.65, 0)
-DestroyButton.Font = Enum.Font.GothamBold
-DestroyButton.Text = "销毁"
-DestroyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-DestroyButton.TextScaled = true
-
-UICorner.CornerRadius = UDim.new(0.1, 0)
-UICorner.Parent = MainFrame
-
-UIGradient.Parent = MainFrame
-UIGradient.Color = ColorSequence.new{
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(45, 45, 45)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(75, 75, 75))
-}
-
-DecreaseButton.MouseButton1Click:Connect(function()
-    local speed = tonumber(SpeedTextBox.Text) or 1
-    SpeedTextBox.Text = tostring(math.max(speed - 1, 1))
-end)
-
-IncreaseButton.MouseButton1Click:Connect(function()
-    local speed = tonumber(SpeedTextBox.Text) or 1
-    SpeedTextBox.Text = tostring(speed + 1)
-end)
-
-local velocityHandlerName
-local gyroHandlerName
-local camera
-local v3none
-local v3zero
-local v3inf
-local controlModule
-local bv
-local bg
-local mfly1
-local mfly2
-
-local function EnableFly()
-    velocityHandlerName = 32
-    gyroHandlerName = 64
-    camera = workspace.CurrentCamera
-    v3none = Vector3.new()
-    v3zero = Vector3.new(0, 0, 0)
-    v3inf = Vector3.new(9e9, 9e9, 9e9)
-    controlModule = require(game.Players.LocalPlayer.PlayerScripts:WaitForChild("PlayerModule"):WaitForChild("ControlModule"))
-
-    bv = Instance.new("BodyVelocity")
-    bv.Name = velocityHandlerName
-    bv.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
-    bv.MaxForce = v3zero
-    bv.Velocity = v3zero
-
-    bg = Instance.new("BodyGyro")
-    bg.Name = gyroHandlerName
-    bg.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
-    bg.MaxTorque = v3inf
-    bg.P = 1000
-    bg.D = 50
-
-    mfly1 = game.Players.LocalPlayer.CharacterAdded:Connect(function()
-        local bv = Instance.new("BodyVelocity")
-        bv.Name = velocityHandlerName
-        bv.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
-        bv.MaxForce = v3zero
-        bv.Velocity = v3zero
-
-        bg = Instance.new("BodyGyro")
-        bg.Name = gyroHandlerName
-        bg.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
-        bg.MaxTorque = v3inf
-        bg.P = 1000
-        bg.D = 50
-    end)
-
-    mfly2 = game:GetService('RunService').RenderStepped:Connect(function()
-        camera = workspace.CurrentCamera
-        local speed = tonumber(SpeedTextBox.Text) or 1 
-
-        if game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid") 
-            and game.Players.LocalPlayer.Character.HumanoidRootPart 
-            and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild(velocityHandlerName) 
-            and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild(gyroHandlerName) then
-
-            local humanoid = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid")
-            local VelocityHandler = game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild(velocityHandlerName)
-            local GyroHandler = game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild(gyroHandlerName)
-
-            VelocityHandler.MaxForce = v3inf
-            GyroHandler.MaxTorque = v3inf
-            GyroHandler.CFrame = camera.CFrame
-
-            local direction = controlModule:GetMoveVector()
-            local calculatedVelocity = v3none
-
-            calculatedVelocity = calculatedVelocity 
-                                 + camera.CFrame.RightVector * direction.X * speed * 50
-                                 - camera.CFrame.LookVector * direction.Z * speed * 50
-
-            VelocityHandler.Velocity = calculatedVelocity
-        end
-    end)
-end
-
-local function DisableFly()
-    if game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild(velocityHandlerName) and game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild(gyroHandlerName) then
-        game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild(velocityHandlerName):Destroy()
-        game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild(gyroHandlerName):Destroy()
-    end
-    game.Players.LocalPlayer.Character:FindFirstChildWhichIsA("Humanoid").PlatformStand = false
-    if mfly1 then
-        mfly1:Disconnect()
-    end
-    if mfly2 then
-        mfly2:Disconnect()
-    end
-end
-
-FlyButton.MouseButton1Click:Connect(function()
-    if FlyButton.Text == "飞行" then
-        FlyButton.Text = "停止飞行"
-        EnableFly()
-    else
-        FlyButton.Text = "飞行"
-        DisableFly()
-    end
-end)
-
-DestroyButton.MouseButton1Click:Connect(function()
-    DisableFly() 
-    ScreenGui:Destroy() 
-end)
-    end
-})
-
-GeneralSection:Button({
-    Title = "飞车2", 
-    Desc = "加载飞车脚本2",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/dingding123hhh/vb/main/%E9%A3%9E%E8%BD%A6.lua", true))()
-    end
-})
-
-GeneralSection:Button({
-    Title = "重进", 
-    Desc = "重新进服务器",
-    Callback = function()
-game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer)
-if not pcall(function()
-    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, game.JobId, game:GetService("Players").LocalPlayer)
-end) then
-    game:GetService("TeleportService"):Teleport(game.PlaceId)
-end
     end
 })
 
@@ -892,7 +667,7 @@ CameraSection:Button({
         
         WindUI:Notify({
             Title = "视角切换",
-            Content = "已切换到第三人称",
+            Content = "已切换到第三人称,手动缩放视角即可",
             Duration = 2,
             Icon = "users"
         })
