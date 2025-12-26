@@ -2,16 +2,16 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 local gradientColors = {
-    "rgb(255, 230, 235)",
-    "rgb(255, 210, 220)",
-    "rgb(255, 190, 205)",
-    "rgb(255, 170, 190)",
-    "rgb(255, 150, 175)",
-    "rgb(245, 140, 180)",
-    "rgb(235, 130, 185)",
-    "rgb(225, 120, 190)",
-    "rgb(215, 110, 195)",
-    "rgb(205, 100, 200)"
+    "rgb(240, 248, 255)",
+    "rgb(224, 240, 255)",
+    "rgb(209, 232, 255)",
+    "rgb(193, 224, 255)",
+    "rgb(178, 216, 255)",
+    "rgb(162, 208, 255)",
+    "rgb(147, 200, 255)",
+    "rgb(131, 192, 255)",
+    "rgb(116, 184, 255)",
+    "rgb(100, 176, 255)"
 }
 
 local username = game.Players.LocalPlayer.Name
@@ -29,9 +29,9 @@ for i = 1, #version do
 end
 
 WindUI:Popup({
-    Title = '<font color="' .. gradientColors[1] .. '">永</font><font color="' .. gradientColors[5] .. '">爱</font>',
+    Title = '<font color="' .. gradientColors[1] .. '">甘</font><font color="' .. gradientColors[5] .. '">城</font>',
     IconThemed = true,
-    Content = "尊敬的用户 " .. coloredUsername .. " \n您使用的 <font color='" .. gradientColors[1] .. "'>永</font><font color='" .. gradientColors[5] .. "'>爱</font> 当前版本型号是: " .. coloredVersion .. "\n现已支持4个服务器！",
+    Content = "尊敬的用户 " .. coloredUsername .. " \n此脚本完全免费 请勿拿去圈钱\n感谢您的使用",
     Buttons = {
         {
             Title = "取消",
@@ -52,25 +52,25 @@ WindUI:Popup({
 
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = '永爱',
-        Icon = "heart",
+        Title = '甘城',
+        Icon = "crown",
         IconThemed = true,
-        Author = "v1.2.4",
+        Author = "挽",
         Folder = "CloudHub",
         Size = UDim2.fromOffset(580, 440),
         Transparent = true,
-        Theme = "Dark",
+        Theme = "Light",
         HideSearchBar = false,
         ScrollBarEnabled = true,
         Resizable = true,
-        Background = "https://raw.githubusercontent.com/XxwanhexxX/UN/main/preview_png.png",
+        Background = "https://raw.githubusercontent.com/mtaskhh/script/refs/heads/Other/retouch_2025101321572104.jpg",
         BackgroundImageTransparency = 0.5,
         User = {
             Enabled = true,
             Callback = function()
                 WindUI:Notify({
                     Title = "点击了自己",
-                    Content = "没什么", 
+                    Content = "你好香", 
                     Duration = 1,
                     Icon = "4483362748"
                 })
@@ -90,7 +90,7 @@ function createUI()
             Content = {
                 {
                     Type = "Button", 
-                    Text = "永爱",
+                    Text = "甘城",
                     Style = "Subtle", 
                     Size = UDim2.new(1, -20, 0, 30),
                     Callback = function()
@@ -101,7 +101,7 @@ function createUI()
     })
 
 Window:EditOpenButton({
-    Title = "永爱",
+    Title = "甘城",
     Icon = "rbxassetid://105677776902677",
     CornerRadius = UDim.new(0,16),
     StrokeThickness = 4,
@@ -115,32 +115,43 @@ Window:Tag({
     })
 
 Window:EditOpenButton({
-    Title = "永爱",
-    Icon = "heart",
+    Title = "打开",
+    Icon = "crown",
     CornerRadius = UDim.new(0,16),
-    StrokeThickness = 4,
-    Color = ColorSequence.new(Color3.fromHex("FF6B6B")),
+    StrokeThickness = 6,
+    Color = ColorSequence.new(
+Color3.fromHex("ADD8E6"),
+Color3.fromHex("FFFFFF")
+    ),
+    OnlyMobile = false,
+    Enabled = true,
     Draggable = true,
 })
 
-spawn(function()
-    while true do
-        for hue = 0, 1, 0.01 do  
-            local color = Color3.fromHSV(hue, 0.8, 1)  
-            Window:EditOpenButton({
-                Color = ColorSequence.new(color)
-            })
-            wait(0.04)  
-        end
+Window:SetBackgroundImageTransparency(0.5)
+
+Window:CreateTopbarButton("ThemeToggle", "moon", function()
+    local currentTheme = WindUI:GetCurrentTheme()
+    if currentTheme == "Light" then
+        WindUI:SetTheme("Dark")
+        WindUI:Notify({
+            Title = "已切换为光亮黑暗主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:moon"
+        })
+    else
+        WindUI:SetTheme("Light")
+        WindUI:Notify({
+            Title = "已切换为光亮主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:sun"
+        })
     end
-end)
+end, 990)
 
-local LockSection = Window:Section({
-    Title = "公告",
-    Opened = true,
-})
-
-local infoTab = Window:Tab({Title = "通知", Icon = "layout-grid", Locked = false})
+local infoTab = Window:Tab({Title = "公告", Icon = "layout-grid", Locked = false})
 
 local LockSection = Window:Section({
     Title = "主功能",
@@ -173,32 +184,46 @@ local J = AddTab(OtherSection, "载具", "car")
 infoSection:Divider()
 
 infoSection:Paragraph({
-    Title = "关于",
-    Desc = "半成品\n国内免费最佳\n成品认准at",
+    Title = "必看",
+    Desc = "开源脚本严禁拿去圈钱\n国内免费最强",
     ThumbnailSize = 190,
 })
 
-local infoSection = infoTab:Section({Title = "更新公告", Icon = "bell", Opened = true})
-
-infoSection:Divider()
+local infoSection = infoTab:Section({Title = "信息", Icon = "bell", Opened = true})
 
 infoSection:Paragraph({
-    Title = "12.6提示",
-    Desc = "更新优化\n修复大部分功能",
-    ThumbnailSize = 190,
-})
-
-
-infoSection:Paragraph({
-    Title = "11.5提示",
-    Desc = "更新添加\n+子弹追踪 +自瞄功能 +自动功能",
-    ThumbnailSize = 190,
+    Title = "账号注册时间",
+    Desc = tostring(game.Players.LocalPlayer.AccountAge).."天"
 })
 
 infoSection:Paragraph({
-    Title = "10.21提示",
-    Desc = "更新添加\n+透视功能 +玩家功能 +RPG功能",
-    ThumbnailSize = 190,
+    Title = "服务器ID", 
+    Desc = tostring(game.GameId)
+})
+
+infoSection:Paragraph({
+    Title = "用户ID",
+    Desc = tostring(game.Players.LocalPlayer.UserId)
+})
+
+infoSection:Paragraph({
+    Title = "客户端ID",
+    Desc = tostring(game:GetService("RbxAnalyticsService"):GetClientId())
+})
+
+infoSection:Paragraph({
+    Title = "注入器",
+    Desc = identifyexecutor and identifyexecutor() or "未知"
+})
+
+infoSection:Paragraph({
+    Title = "用户名",
+    Desc = game.Players.LocalPlayer.Name
+})
+
+infoSection:Paragraph({
+    Title = "服务器名称", 
+    Desc = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 })
 
 infoTab:Select()
@@ -3853,7 +3878,7 @@ TeleportTab:Button({
 })
 
 WindUI:Notify({
-    Title = "永爱",
+    Title = "甘城",
     Content = "战争大亨",
     Duration = 3,
 })
