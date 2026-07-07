@@ -2,16 +2,16 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footag
 local Confirmed = false
 
 local gradientColors = {
-    "rgb(255, 230, 235)",
-    "rgb(255, 210, 220)",
-    "rgb(255, 190, 205)",
-    "rgb(255, 170, 190)",
-    "rgb(255, 150, 175)",
-    "rgb(245, 140, 180)",
-    "rgb(235, 130, 185)",
-    "rgb(225, 120, 190)",
-    "rgb(215, 110, 195)",
-    "rgb(205, 100, 200)"
+    "rgb(240, 248, 255)",
+    "rgb(224, 240, 255)",
+    "rgb(209, 232, 255)",
+    "rgb(193, 224, 255)",
+    "rgb(178, 216, 255)",
+    "rgb(162, 208, 255)",
+    "rgb(147, 200, 255)",
+    "rgb(131, 192, 255)",
+    "rgb(116, 184, 255)",
+    "rgb(100, 176, 255)"
 }
 
 local username = game.Players.LocalPlayer.Name
@@ -29,9 +29,9 @@ for i = 1, #version do
 end
 
 WindUI:Popup({
-    Title = '<font color="' .. gradientColors[1] .. '">永</font><font color="' .. gradientColors[5] .. '">爱</font>',
+    Title = '<font color="' .. gradientColors[1] .. '">甘</font><font color="' .. gradientColors[5] .. '">城</font>',
     IconThemed = true,
-    Content = "尊敬的用户 " .. coloredUsername .. " \n您使用的 <font color='" .. gradientColors[1] .. "'>永</font><font color='" .. gradientColors[5] .. "'>爱</font> 当前版本型号是: " .. coloredVersion .. "\n现已支持4个服务器！",
+    Content = "尊敬的用户 " .. coloredUsername .. " \n此脚本完全免费\n请勿拿去圈钱\n感谢您的使用\n现已支持开源",
     Buttons = {
         {
             Title = "取消",
@@ -52,95 +52,91 @@ WindUI:Popup({
 
 function createUI()
     local Window = WindUI:CreateWindow({
-        Title = '永爱',
-        Icon = "heart",
+        Title = '甘城',
+        Icon = "crown",
         IconThemed = true,
-        Author = "v1.2.4",
+        Author = "v2.0.0",
         Folder = "CloudHub",
         Size = UDim2.fromOffset(580, 440),
         Transparent = true,
         Theme = "Dark",
         HideSearchBar = false,
-        ScrollBarEnabled = true,
         Resizable = true,
-        Background = "https://raw.githubusercontent.com/XxwanhexxX/UN/main/preview_png.png",
+        Background = "https://raw.githubusercontent.com/mtaskhh/script/refs/heads/Other/retouch_2025101321572104.jpg",
         BackgroundImageTransparency = 0.5,
-        User = {
-            Enabled = true,
-            Callback = function()
-                WindUI:Notify({
-                    Title = "点击了自己",
-                    Content = "没什么", 
-                    Duration = 1,
-                    Icon = "4483362748"
-                })
-            end,
-            Anonymous = false
-        },
-        SideBarWidth = 250,
         Search = {
             Enabled = true,
             Placeholder = "搜索...",
             Callback = function(searchText)
-                print("搜索内容:", searchText)
+                print("搜索功能:", searchText)
             end
         },
-        SidePanel = {
+        User = {
             Enabled = true,
-            Content = {
-                {
-                    Type = "Button", 
-                    Text = "永爱",
-                    Style = "Subtle", 
-                    Size = UDim2.new(1, -20, 0, 30),
-                    Callback = function()
-                    end
-                }
-            }
-        }
+            Callback = function()
+                WindUI:Notify({
+                    Title = "玩家信息",
+                    Content = "玩家名称：" .. game.Players.LocalPlayer.Name,
+                    Duration = 2,
+                    Icon = "user"
+                })
+            end
+        },
+        SideBarWidth = 250
     })
 
-Window:EditOpenButton({
-    Title = "永爱",
-    Icon = "rbxassetid://105677776902677",
-    CornerRadius = UDim.new(0,16),
-    StrokeThickness = 4,
-    Color = ColorSequence.new(Color3.fromHex("FF6B6B")),
-    Draggable = true,
-})
+Window:CreateTopbarButton("ThemeToggle", "moon", function()
+    local currentTheme = WindUI:GetCurrentTheme()
+    if currentTheme == "Light" then
+        WindUI:SetTheme("Dark")
+        WindUI:Notify({
+            Title = "已切换为光亮黑暗主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:moon"
+        })
+    else
+        WindUI:SetTheme("Light")
+        WindUI:Notify({
+            Title = "已切换为光亮主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:sun"
+        })
+    end
+end, 990)
+
+WindUI:SetNotificationLower(true)
 
 Window:Tag({
         Title = "极速传奇",
         Color = Color3.fromHex("#00ffff") 
     })
-
-Window:EditOpenButton({
-    Title = "永爱",
-    Icon = "heart",
-    CornerRadius = UDim.new(0,16),
-    StrokeThickness = 4,
-    Color = ColorSequence.new(Color3.fromHex("FF6B6B")),
-    Draggable = true,
+    
+local tag = Window:Tag({
+    Title = os.date("%H:%M:%S"),
+    Color = Color3.fromHex("#00ffff")
 })
 
 spawn(function()
-    while true do
-        for hue = 0, 1, 0.01 do  
-            local color = Color3.fromHSV(hue, 0.8, 1)  
-            Window:EditOpenButton({
-                Color = ColorSequence.new(color)
-            })
-            wait(0.04)  
-        end
+    while Window do
+        task.wait(1)
+        tag:SetTitle(os.date("%H:%M:%S"))
     end
 end)
 
-local LockSection = Window:Section({
-    Title = "公告",
-    Opened = true,
+Window:EditOpenButton({
+    Title = "甘城",
+    Icon = "crown",
+    CornerRadius = UDim.new(0,26),
+    StrokeThickness = 4,
+    Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromHex("ADD8E6")),
+        ColorSequenceKeypoint.new(0.5, Color3.fromHex("4169E1")),
+        ColorSequenceKeypoint.new(1, Color3.fromHex("ADD8E6"))
+    }),
+    Draggable = true,
 })
-
-local infoTab = Window:Tab({Title = "通知", Icon = "layout-grid", Locked = false})
 
 local LockSection = Window:Section({
     Title = "主功能",
@@ -148,54 +144,35 @@ local LockSection = Window:Section({
 })
 
 local function AddTab(section, title, icon)
-    return section:Tab({Title = title, Icon = icon})
+    return section:Tab({Title = title, Icon = icon, Opened = true})
 end
 
-local A = AddTab(LockSection, "主要", "rbxassetid://7734068321")  
-local B = AddTab(LockSection, "卡宠", "rbxassetid://7734068321")  
-local C = AddTab(LockSection, "宝石", "rbxassetid://7734068321")  
-local D = AddTab(LockSection, "比赛", "rbxassetid://7734068321")  
-local E = AddTab(LockSection, "传送", "rbxassetid://7734068321")  
-local F = AddTab(LockSection, "重生", "rbxassetid://7734068321")  
-local G = AddTab(LockSection, "修改", "rbxassetid://7734068321")  
-local H = AddTab(LockSection, "宠物蛋", "rbxassetid://7734068321")  
-local I = AddTab(LockSection, "卡宠说明", "rbxassetid://7734068321")  
-local J = AddTab(LockSection, "画质+通用", "rbxassetid://7734068321")
-
-local infoSection = infoTab:Section({Title = "详情", Opened = true})
-
-infoSection:Paragraph({
-    Title = "关于",
-    Desc = "国内第一极速传奇\n免费最佳",
-    ThumbnailSize = 190,
-})
-
-local infoSection = infoTab:Section({Title = "更新公告", Icon = "bell", Opened = true})
-
-infoSection:Divider()
-
-infoSection:Paragraph({
-    Title = "12.8提示",
-    Desc = "更新优化\n修复大部分功能",
-    ThumbnailSize = 190,
-})
-
-
-infoSection:Paragraph({
-    Title = "11.9提示",
-    Desc = "更新添加\n+画质 +宠物 +传送",
-    ThumbnailSize = 190,
-})
-
-infoSection:Paragraph({
-    Title = "10.24提示",
-    Desc = "更新添加\n+刷宝石 +刷通行证 +卡宠",
-    ThumbnailSize = 190,
-})
-
-infoTab:Select()
+local A = AddTab(LockSection, "主要", "house")
+local B = AddTab(LockSection, "卡宠", "paw-print")  
+local C = AddTab(LockSection, "宝石", "gem")
+local D = AddTab(LockSection, "比赛", "flag")
+local E = AddTab(LockSection, "传送", "send")
+local F = AddTab(LockSection, "重生", "rotate-ccw")
+local G = AddTab(LockSection, "修改", "pencil")
+local H = AddTab(LockSection, "宠物", "dog")
+local I = AddTab(LockSection, "说明", "info")
+local J = AddTab(LockSection, "通用", "settings")
+local K = AddTab(LockSection, "服务器", "server")
 
 local extraSection = A:Section({Title = "额外", Opened = true})
+
+extraSection:Button({
+    Title = "抽奖一次",
+    Callback = function()
+        game:GetService("ReplicatedStorage").rEvents.openFortuneWheelRemote:InvokeServer("openFortuneWheel", game:GetService("ReplicatedStorage").fortuneWheelChances["Fortune Wheel"])
+        WindUI:Notify({
+            Title = "甘城",
+            Content = "抽奖成功 请确保你有抽奖次数",
+            Duration = 2,
+            Icon = "gift"
+        })
+    end
+})
 
 extraSection:Button({
     Title = "收集全部宝箱",
@@ -203,6 +180,12 @@ extraSection:Button({
         for _, v in pairs(game.ReplicatedStorage.chestRewards:GetChildren()) do
             game.ReplicatedStorage.rEvents.checkChestRemote:InvokeServer(v.Name)
         end
+        WindUI:Notify({
+            Title = "甘城",
+            Content = "已收集全部宝箱",
+            Duration = 2,
+            Icon = "gift"
+        })
     end
 })
 
@@ -212,6 +195,12 @@ extraSection:Button({
         for i, v in ipairs(game:GetService("ReplicatedStorage").gamepassIds:GetChildren()) do
             v.Parent = game.Players.LocalPlayer.ownedGamepasses
         end
+        WindUI:Notify({
+            Title = "甘城",
+            Content = "捡一个球就可以看到全部通行证",
+            Duration = 2,
+            Icon = "crown"
+        })
     end
 })
 
@@ -235,6 +224,30 @@ extraSection:Toggle({
                             end
                         end
                     end)
+                end
+            end)
+        end
+    end
+})
+
+extraSection:Toggle({
+    Title = "自动收集奖励",
+    Default = false,
+    Callback = function(state)
+        getgenv().AutoCollectReward = state
+        if state then
+            spawn(function()
+                while getgenv().AutoCollectReward do
+                    pcall(function()
+                        for i = 1, 8 do
+                            local args = {
+                                "claimGift",
+                                i
+                            }
+                            game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("freeGiftClaimRemote"):InvokeServer(unpack(args))
+                        end
+                    end)
+                    task.wait()
                 end
             end)
         end
@@ -1027,6 +1040,61 @@ modifySection:Input({
     end
 })
 
+modifySection:Divider()
+
+local fixValues = {
+    exp = 0,
+    level = 0,
+    races = 0,
+    hoops = 0,
+    rebirths = 0,
+    steps = 0,
+    gems = 0
+}
+
+local fixLoop = nil
+local isFixing = false
+
+modifySection:Toggle({
+    Title = "先输入数值 再开这个锁定",
+    Default = false,
+    Callback = function(state)
+        isFixing = state
+        if state then
+            local player = game:GetService("Players").LocalPlayer
+            fixValues.exp = player.exp.Value
+            fixValues.level = player.level.Value
+            fixValues.races = player.leaderstats.Races.Value
+            fixValues.hoops = player.leaderstats.Hoops.Value
+            fixValues.rebirths = player.leaderstats.Rebirths.Value
+            fixValues.steps = player.leaderstats.Steps.Value
+            fixValues.gems = player.Gems.Value
+            
+            getgenv().FixModify = true
+            fixLoop = spawn(function()
+                while isFixing do
+                    pcall(function()
+                        local player = game:GetService("Players").LocalPlayer
+                        player.exp.Value = fixValues.exp
+                        player.level.Value = fixValues.level
+                        player.leaderstats.Races.Value = fixValues.races
+                        player.leaderstats.Hoops.Value = fixValues.hoops
+                        player.leaderstats.Rebirths.Value = fixValues.rebirths
+                        player.leaderstats.Steps.Value = fixValues.steps
+                        player.Gems.Value = fixValues.gems
+                    end)
+                    task.wait()
+                end
+            end)
+        else
+            getgenv().FixModify = false
+            if fixLoop then
+                fixLoop = nil
+            end
+        end
+    end
+})
+
 local petShopSection = H:Section({Title = "购买模式", Opened = true})
 
 local petOptions = {"Swift Samurai", "Hyperblast", "Flaming Hedgehog", "Rainbow Steps", "Electro Golem"}
@@ -1046,7 +1114,7 @@ local BuyPetShop = ""
 
 petShopSection:Paragraph({
     Title = "关于直接购买宠物",
-    Desc = "你得保证你有充足的宝石\n因为购买一个宠物就值0.4亿左右\n否则购买失败",
+    Desc = "建议先刷卡宠然后再购买\n你得保证你有充足的宝石\n因为购买一个宠物就值0.4亿左右\n否则购买失败",
     ThumbnailSize = 200,
 })
 
@@ -1060,7 +1128,7 @@ petShopSection:Dropdown({
 })
 
 petShopSection:Button({
-    Title = "购买",
+    Title = "购买一次",
     Callback = function()
         if not BuyPetShop then return end
         local pet = game:GetService("ReplicatedStorage").cPetShopFolder:FindFirstChild(BuyPetShop)
@@ -1139,7 +1207,7 @@ infoSection:Paragraph({
     ThumbnailSize = 190,
 })
 
-local settingsSection = J:Section({Title = "画质+通用", Opened = true})
+local settingsSection = J:Section({Title = "画质功能", Opened = true})
 
 settingsSection:Toggle({
     Title = "去雾",
@@ -1161,7 +1229,7 @@ settingsSection:Toggle({
     Callback = function(state)
         local Lighting = game:GetService("Lighting")
         if state then
-            Lighting.Brightness = 2
+            Lighting.Brightness = 4
             Lighting.Ambient = Color3.new(0.4, 0.6, 0.4)
             Lighting.ColorShift_Top = Color3.new(0.3, 0.5, 0.3)
         else
@@ -1171,8 +1239,6 @@ settingsSection:Toggle({
         end
     end
 })
-
-settingsSection:Divider()
 
 local otherSection = J:Section({Title = "常用功能", Opened = true})
 
@@ -1299,16 +1365,27 @@ otherSection:Toggle({
     end
 })
 
-WindUI:Notify({
-    Title = "永爱",
-    Content = "反挂机已开启",
-    Duration = 3,
+local serverSection = K:Section({Title = "服务器", Opened = true})
+
+serverSection:Button({
+    Title = "重进当前服务器",
+    Callback = function()
+        game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+    end
+})
+
+serverSection:Button({
+    Title = "切换服务器",
+    Callback = function()
+        game:GetService("TeleportService"):Teleport(game.PlaceId)
+    end
 })
 
 WindUI:Notify({
-    Title = "永爱",
-    Content = "极速传奇",
+    Title = "甘城",
+    Content = "反挂机已开启",
     Duration = 3,
+    Icon = "shield-check"
 })
 
 print("Anti Afk On")
