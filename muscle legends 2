@@ -1,7 +1,10 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
-if getgenv().ScriptLoaded then return end
-getgenv().ScriptLoaded = true
+if getgenv().UI_Window then
+    pcall(function()
+        getgenv().UI_Window:Close()
+    end)
+end
 
 local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
 
@@ -51,6 +54,12 @@ function createUI()
         },
         SideBarWidth = 250
     })
+
+    getgenv().UI_Window = Window
+
+    Window:OnClose(function()
+        getgenv().UI_Window = nil
+    end)
 
 Window:CreateTopbarButton("ThemeToggle", "moon", function()
     local currentTheme = WindUI:GetCurrentTheme()
@@ -116,6 +125,8 @@ end
 
 local A = AddTab(LockSection, "刷业报", "swords")
 local B = AddTab(LockSection, "服务器", "server")
+
+A:Select()
 
 if not _G.WindUI_AutoStates then
     _G.WindUI_AutoStates = {
