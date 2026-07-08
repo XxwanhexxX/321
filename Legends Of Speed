@@ -168,7 +168,7 @@ extraSection:Button({
         WindUI:Notify({
             Title = "甘城",
             Content = "抽奖成功 请确保你有抽奖次数",
-            Duration = 2,
+            Duration = 3,
             Icon = "gift"
         })
     end
@@ -183,7 +183,7 @@ extraSection:Button({
         WindUI:Notify({
             Title = "甘城",
             Content = "已收集全部宝箱",
-            Duration = 2,
+            Duration = 3,
             Icon = "gift"
         })
     end
@@ -198,7 +198,7 @@ extraSection:Button({
         WindUI:Notify({
             Title = "甘城",
             Content = "捡一个球就可以看到全部通行证",
-            Duration = 2,
+            Duration = 3,
             Icon = "crown"
         })
     end
@@ -1091,33 +1091,30 @@ modifySection:Toggle({
 
 local petShopSection = H:Section({Title = "购买模式", Opened = true})
 
-local petOptions = {"Swift Samurai", "Hyperblast", "Flaming Hedgehog", "Rainbow Steps", "Electro Golem"}
-local petDisplayNames = {
-    ["Swift Samurai"] = "斯威夫特武士",
-    ["Hyperblast"] = "金色尾巴", 
-    ["Flaming Hedgehog"] = "火焰刺猬",
-    ["Rainbow Steps"] = "彩虹尾巴",
-    ["Electro Golem"] = "电光雷宠-太空宠物"
+local petMap = {
+    ["斯威夫特武士"] = "Swift Samurai",
+    ["金色尾巴"] = "Hyperblast",
+    ["彩虹尾巴"] = "Rainbow Steps",
+    ["龙火"] = "Dragonfire",
+    ["火焰刺猬"] = "Flaming Hedgehog",
+    ["电光雷宠"] = "Electro Golem"
 }
-local displayOptions = {}
-for _, engName in ipairs(petOptions) do
-    table.insert(displayOptions, engName .. "（" .. petDisplayNames[engName] .. "）")
-end
+local petDisplayNames = {"斯威夫特武士", "金色尾巴", "彩虹尾巴", "龙火", "火焰刺猬", "电光雷宠"}
 
 local BuyPetShop = ""
 
 petShopSection:Paragraph({
     Title = "关于直接购买宠物",
-    Desc = "建议先刷卡宠然后再购买\n你得保证你有充足的宝石\n因为购买一个宠物就值0.4亿左右\n否则购买失败",
+    Desc = "建议先刷卡宠然后再购买\n你得保证你有充足的宝石\n购买一个宠物就值0.4亿左右 否则购买失败\n电光雷宠和火焰刺猬只能在太空地区买\n中间三个都是尾迹",
     ThumbnailSize = 200,
 })
 
 petShopSection:Dropdown({
     Title = "选择购买的宠物",
-    Values = displayOptions,
+    Values = petDisplayNames,
     Value = "",
     Callback = function(Value)
-        BuyPetShop = Value:match("^(.-)（")
+        BuyPetShop = petMap[Value]
     end
 })
 
@@ -1146,7 +1143,7 @@ petShopSection:Toggle({
                             game:GetService("ReplicatedStorage").cPetShopRemote:InvokeServer(pet)
                         end
                     end)
-                    wait(0.5)
+                    wait(0.2)
                 end
             end)
         end
@@ -1155,20 +1152,22 @@ petShopSection:Toggle({
 
 local evolveSection = H:Section({Title = "进化", Opened = true})
 
-local function getRandomOwnedPet()
-    local ownedPets = game.Players.LocalPlayer:FindFirstChild("ownedPets")
-    if not ownedPets then return end
-    local pets = ownedPets:GetChildren()
-    return #pets > 0 and pets[math.random(#pets)] or nil
-end
+local petEvolveMap = {
+    ["斯威夫特武士"] = "Swift Samurai",
+    ["火焰刺猬"] = "Flaming Hedgehog",
+    ["电光雷宠"] = "Electro Golem"
+}
+local petEvolveList = {"斯威夫特武士", "火焰刺猬", "电光雷宠"}
+local EvolvePet = ""
 
-evolveSection:Button({
-    Title = "进化一次",
-    Callback = function()
-        local randomPet = getRandomOwnedPet()
-        if randomPet then
-            game:GetService("ReplicatedStorage").rEvents.petEvolveEvent:FireServer("evolvePet", randomPet.Name)
-        end
+Interstellar.evolvepet = false
+
+evolveSection:Dropdown({
+    Title = "选择进化的宠物",
+    Values = petEvolveList,
+    Value = "",
+    Callback = function(Value)
+        EvolvePet = petEvolveMap[Value]
     end
 })
 
@@ -1180,13 +1179,10 @@ evolveSection:Toggle({
         if Interstellar.evolvepet then
             spawn(function()
                 while Interstellar.evolvepet do
-                    pcall(function()
-                        local randomPet = getRandomOwnedPet()
-                        if randomPet then
-                            game:GetService("ReplicatedStorage").rEvents.petEvolveEvent:FireServer("evolvePet", randomPet.Name)
-                        end
-                    end)
-                    wait(0.1)
+                    if EvolvePet and EvolvePet ~= "" then
+                        game:GetService("ReplicatedStorage").rEvents.petEvolveEvent:FireServer("evolvePet", EvolvePet)
+                    end
+                    wait()
                 end
             end)
         end
