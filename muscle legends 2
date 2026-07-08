@@ -1,6 +1,6 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
-local ConfigPath = "自动刷业报配置"
+local ConfigPath = "刷业报配置"
 local HttpService = game:GetService("HttpService")
 
 local defaultConfig = {
