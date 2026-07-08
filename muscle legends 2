@@ -1,5 +1,45 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
+local ConfigPath = "自动刷业报配置"
+local HttpService = game:GetService("HttpService")
+
+local defaultConfig = {
+    AutoKillReport3 = false,
+    AutoRejoinTimer = false,
+    AutoRejoinOnDeath = false
+}
+
+local config = {}
+
+local function loadConfig()
+    if isfile and isfile(ConfigPath) then
+        local success, data = pcall(function()
+            return HttpService:JSONDecode(readfile(ConfigPath))
+        end)
+        if success and data then
+            for k, v in pairs(defaultConfig) do
+                if data[k] ~= nil then
+                    defaultConfig[k] = data[k]
+                end
+            end
+        end
+    end
+    for k, v in pairs(defaultConfig) do
+        config[k] = v
+    end
+    return config
+end
+
+local function saveConfig()
+    if writefile then
+        pcall(function()
+            writefile(ConfigPath, HttpService:JSONEncode(config))
+        end)
+    end
+end
+
+loadConfig()
+
 if getgenv().UI_Window then
     pcall(function()
         getgenv().UI_Window:Close()
@@ -154,8 +194,10 @@ end)
 
 A:Toggle({
     Title = "自动刷业报",
-    Default = AutoStates.AutoKillReport3,
+    Default = config.AutoKillReport3,
     Callback = function(state)
+        config.AutoKillReport3 = state
+        saveConfig()
         AutoStates.AutoKillReport3 = state
         if AutoStates.AutoKillReportLoops3 then 
             for _,c in pairs(AutoStates.AutoKillReportLoops3) do 
@@ -211,7 +253,7 @@ A:Toggle({
 local serverSection = B:Section({Title = "切服", Opened = true})
 
 serverSection:Button({
-    Title = "切换服务器",
+    Title = "点击换服",
     Callback = function()
         local HttpService = game:GetService("HttpService")
         local request = syn and syn.request or http and http.request or http_request or request or httprequest
@@ -234,9 +276,11 @@ serverSection:Button({
 })
 
 serverSection:Toggle({
-    Title = "30秒自动换服",
-    Default = false,
+    Title = "30秒换服",
+    Default = config.AutoRejoinTimer,
     Callback = function(state)
+        config.AutoRejoinTimer = state
+        saveConfig()
         getgenv().AutoRejoinTimer = state
         if state then
             spawn(function()
@@ -267,9 +311,11 @@ serverSection:Toggle({
 })
 
 serverSection:Toggle({
-    Title = "死亡自动换服",
-    Default = false,
+    Title = "死亡换服",
+    Default = config.AutoRejoinOnDeath,
     Callback = function(state)
+        config.AutoRejoinOnDeath = state
+        saveConfig()
         getgenv().AutoRejoinOnDeath = state
         if state then
             spawn(function()
