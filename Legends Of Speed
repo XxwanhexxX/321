@@ -1,3 +1,5 @@
+-- 拿去缝合并圈钱的你妈死了
+-- 可以二改不可以拿去圈钱
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
 local Confirmed = false
 
