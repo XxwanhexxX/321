@@ -1,5 +1,15 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
+if getgenv().ScriptLoaded then
+    pcall(function()
+        if getgenv().UI_Window then
+            getgenv().UI_Window:Close()
+        end
+    end)
+    return
+end
+getgenv().ScriptLoaded = true
+
 local ConfigPath = "刷业报配置"
 local HttpService = game:GetService("HttpService")
 
@@ -39,12 +49,6 @@ local function saveConfig()
 end
 
 loadConfig()
-
-if getgenv().UI_Window then
-    pcall(function()
-        getgenv().UI_Window:Close()
-    end)
-end
 
 local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
 
@@ -99,6 +103,7 @@ function createUI()
 
     Window:OnClose(function()
         getgenv().UI_Window = nil
+        getgenv().ScriptLoaded = false
     end)
 
 Window:CreateTopbarButton("ThemeToggle", "moon", function()
