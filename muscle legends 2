@@ -1,6 +1,8 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
-if getgenv().ScriptLoaded then
+local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
+
+if getgenv().IY_LOADED then
     pcall(function()
         if getgenv().UI_Window then
             getgenv().UI_Window:Close()
@@ -8,7 +10,11 @@ if getgenv().ScriptLoaded then
     end)
     return
 end
-getgenv().ScriptLoaded = true
+getgenv().IY_LOADED = true
+
+if queue_on_teleport then
+    queue_on_teleport("loadstring(game:HttpGet('" .. ScriptUrl .. "'))()")
+end
 
 local ConfigPath = "刷业报配置"
 local HttpService = game:GetService("HttpService")
@@ -49,18 +55,6 @@ local function saveConfig()
 end
 
 loadConfig()
-
-local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
-
-game.Players.LocalPlayer.OnTeleport:Connect(function(state)
-    if state == Enum.TeleportState.Started then
-        getgenv().ScriptLoaded = false
-    end
-end)
-
-if queue_on_teleport then
-    queue_on_teleport("loadstring(game:HttpGet('" .. ScriptUrl .. "'))()")
-end
 
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
 
@@ -103,7 +97,7 @@ function createUI()
 
     Window:OnClose(function()
         getgenv().UI_Window = nil
-        getgenv().ScriptLoaded = false
+        getgenv().IY_LOADED = false
     end)
 
 Window:CreateTopbarButton("ThemeToggle", "moon", function()
