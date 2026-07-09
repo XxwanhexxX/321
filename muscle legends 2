@@ -331,6 +331,33 @@ serverSection:Toggle({
     end
 })
 
+if config.AutoRejoinTimer then
+    getgenv().AutoRejoinTimer = true
+    spawn(function()
+        while getgenv().AutoRejoinTimer do
+            wait(30)
+            local HttpService = game:GetService("HttpService")
+            local request = syn and syn.request or http and http.request or http_request or request or httprequest
+            
+            local response = HttpService:JSONDecode(
+                request({
+                    Url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100&excludeFullGames=true",
+                    Method = "GET"
+                }).Body
+            )
+            
+            local servers = response.data
+            if servers and #servers > 0 then
+                local target = servers[math.random(1, #servers)]
+                if target and target.id then
+                    game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, target.id, game:GetService("Players").LocalPlayer)
+                end
+            end
+            break
+        end
+    end)
+end
+
 serverSection:Toggle({
     Title = "死亡换服",
     Default = config.AutoRejoinOnDeath,
@@ -369,6 +396,37 @@ serverSection:Toggle({
         end
     end
 })
+
+if config.AutoRejoinOnDeath then
+    getgenv().AutoRejoinOnDeath = true
+    spawn(function()
+        while getgenv().AutoRejoinOnDeath do
+            local player = game.Players.LocalPlayer
+            local character = player.Character
+            if character and character:FindFirstChild("Humanoid") and character.Humanoid.Health <= 0 then
+                local HttpService = game:GetService("HttpService")
+                local request = syn and syn.request or http and http.request or http_request or request or httprequest
+                
+                local response = HttpService:JSONDecode(
+                    request({
+                        Url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100&excludeFullGames=true",
+                        Method = "GET"
+                    }).Body
+                )
+                
+                local servers = response.data
+                if servers and #servers > 0 then
+                    local target = servers[math.random(1, #servers)]
+                    if target and target.id then
+                        game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, target.id, game:GetService("Players").LocalPlayer)
+                    end
+                end
+                break
+            end
+            wait(0.5)
+        end
+    end)
+end
 
 print("Anti Afk On")
 local vu = game:GetService("VirtualUser")
