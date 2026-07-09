@@ -1,5 +1,5 @@
 -- 可以二改不可以拿去圈钱
-
+-- 使用的是原生库所以有不少问题
 local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
 
 game.Players.LocalPlayer.OnTeleport:Connect(function(state)
