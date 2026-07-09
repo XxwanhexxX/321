@@ -1,20 +1,20 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
-if getgenv().ScriptLoaded then
+if getgenv().UI_Window then
     pcall(function()
-        if getgenv().UI_Window then
-            getgenv().UI_Window:Close()
-        end
+        getgenv().UI_Window:Close()
     end)
-    return
+    getgenv().UI_Window = nil
 end
-getgenv().ScriptLoaded = true
+
+getgenv().ScriptLoaded = false
 
 local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
 
 game.Players.LocalPlayer.OnTeleport:Connect(function(state)
     if state == Enum.TeleportState.Started then
         getgenv().ScriptLoaded = false
+        getgenv().UI_Window = nil
     end
 end)
 
@@ -22,13 +22,15 @@ if queue_on_teleport then
     queue_on_teleport("loadstring(game:HttpGet('" .. ScriptUrl .. "'))()")
 end
 
-local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
-local ConfigPath = "甘城配置.json"
+local ConfigPath = "workspace/甘城配置.json"
 local HttpService = game:GetService("HttpService")
 
 local defaultConfig = {
-    AutoKillReport3 = false
+    AutoKillReport3 = false,
+    AutoRejoinTimer = false,
+    AutoRejoinOnDeath = false
 }
 
 local config = {}
@@ -296,8 +298,10 @@ serverSection:Button({
 
 serverSection:Toggle({
     Title = "30秒换服",
-    Default = false,
+    Default = config.AutoRejoinTimer,
     Callback = function(state)
+        config.AutoRejoinTimer = state
+        saveConfig()
         getgenv().AutoRejoinTimer = state
         if state then
             spawn(function()
@@ -329,8 +333,10 @@ serverSection:Toggle({
 
 serverSection:Toggle({
     Title = "死亡换服",
-    Default = false,
+    Default = config.AutoRejoinOnDeath,
     Callback = function(state)
+        config.AutoRejoinOnDeath = state
+        saveConfig()
         getgenv().AutoRejoinOnDeath = state
         if state then
             spawn(function()
