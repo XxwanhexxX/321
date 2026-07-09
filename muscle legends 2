@@ -1,10 +1,14 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
-if getgenv().UI_Window then
+if getgenv().ScriptLoaded then
     pcall(function()
-        getgenv().UI_Window:Close()
+        if getgenv().UI_Window then
+            getgenv().UI_Window:Close()
+        end
     end)
+    return
 end
+getgenv().ScriptLoaded = true
 
 local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
 
@@ -19,6 +23,45 @@ if queue_on_teleport then
 end
 
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
+
+local ConfigPath = "甘城配置.json"
+local HttpService = game:GetService("HttpService")
+
+local defaultConfig = {
+    AutoKillReport3 = false
+}
+
+local config = {}
+
+local function loadConfig()
+    local success, data = pcall(function()
+        return readfile(ConfigPath)
+    end)
+    if success and data and data ~= "" then
+        local decodeSuccess, decoded = pcall(function()
+            return HttpService:JSONDecode(data)
+        end)
+        if decodeSuccess and decoded then
+            for k, v in pairs(defaultConfig) do
+                if decoded[k] ~= nil then
+                    defaultConfig[k] = decoded[k]
+                end
+            end
+        end
+    end
+    for k, v in pairs(defaultConfig) do
+        config[k] = v
+    end
+    return config
+end
+
+local function saveConfig()
+    pcall(function()
+        writefile(ConfigPath, HttpService:JSONEncode(config))
+    end)
+end
+
+loadConfig()
 
 function createUI()
     local Window = WindUI:CreateWindow({
@@ -59,6 +102,7 @@ function createUI()
 
     Window:OnClose(function()
         getgenv().UI_Window = nil
+        getgenv().ScriptLoaded = false
     end)
 
 Window:CreateTopbarButton("ThemeToggle", "moon", function()
@@ -152,53 +196,47 @@ spawn(function()
     end
 end)
 
-local ConfigPath = "workspace/刷业报配置.json"
-local HttpService = game:GetService("HttpService")
-
-local defaultConfig = {
-    AutoKillReport3 = false
-}
-
-local config = {}
-
-local function ensureFolder()
-    pcall(function()
-        if not isfolder("workspace") then
-            makefolder("workspace")
-        end
+local function StartKillLoop()
+    if AutoStates.AutoKillReportLoops3 then 
+        for _,c in pairs(AutoStates.AutoKillReportLoops3) do 
+            c:Disconnect()
+        end 
+    end 
+    AutoStates.AutoKillReportLoops3 = {}
+    
+    local pL = game:GetService("RunService").Heartbeat:Connect(function()
+        if not AutoStates.AutoKillReport3 then 
+            pL:Disconnect()
+            return 
+        end 
+        for _,target in pairs(game.Players:GetPlayers()) do 
+            if target ~= game.Players.LocalPlayer and target.Character and target.Character:FindFirstChild("Humanoid") and target.Character.Humanoid.Health > 0 then 
+                pcall(function()
+                    for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do 
+                        if v:IsA("Tool") and v.Name == "Punch" then 
+                            game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
+                        end 
+                    end 
+                    local p = game.Players.LocalPlayer.Character:FindFirstChild("Punch") or game.Players.LocalPlayer.Backpack:FindFirstChild("Punch")
+                    if p then 
+                        p.Parent = game.Players.LocalPlayer.Character
+                        p:Activate()
+                    end
+                    local head = target.Character:FindFirstChild("Head")
+                    local lchar = game.Players.LocalPlayer.Character 
+                    local hand = lchar and lchar:FindFirstChild("LeftHand")
+                    if head and hand then 
+                        firetouchinterest(head, hand, 0)
+                        wait(0.01)
+                        firetouchinterest(head, hand, 1)
+                    end 
+                end)
+            end 
+        end 
+        wait(0.1)
     end)
+    table.insert(AutoStates.AutoKillReportLoops3, pL)
 end
-
-local function loadConfig()
-    ensureFolder()
-    local success, data = pcall(function()
-        return readfile(ConfigPath)
-    end)
-    if success and data and data ~= "" then
-        local decodeSuccess, decoded = pcall(function()
-            return HttpService:JSONDecode(data)
-        end)
-        if decodeSuccess and decoded then
-            for k, v in pairs(defaultConfig) do
-                if decoded[k] ~= nil then
-                    defaultConfig[k] = decoded[k]
-                end
-            end
-        end
-    end
-    for k, v in pairs(defaultConfig) do
-        config[k] = v
-    end
-    return config
-end
-
-local function saveConfig()
-    pcall(function()
-        writefile(ConfigPath, HttpService:JSONEncode(config))
-    end)
-end
-
-loadConfig()
 
 A:Toggle({
     Title = "自动刷业报",
@@ -207,56 +245,29 @@ A:Toggle({
         config.AutoKillReport3 = state
         saveConfig()
         AutoStates.AutoKillReport3 = state
-        if AutoStates.AutoKillReportLoops3 then 
-            for _,c in pairs(AutoStates.AutoKillReportLoops3) do 
-                c:Disconnect()
+        if state then
+            StartKillLoop()
+        else
+            if AutoStates.AutoKillReportLoops3 then 
+                for _,c in pairs(AutoStates.AutoKillReportLoops3) do 
+                    c:Disconnect()
+                end 
             end 
-        end 
-        AutoStates.AutoKillReportLoops3 = {}
-        if not state then 
+            AutoStates.AutoKillReportLoops3 = {}
             if game.Players.LocalPlayer.Character then 
                 local h = game.Players.LocalPlayer.Character:FindFirstChild("Humanoid")
                 if h then 
                     h:UnequipTools()
                 end 
             end 
-            return 
-        end 
-        
-        local pL = game:GetService("RunService").Heartbeat:Connect(function()
-            if not AutoStates.AutoKillReport3 then 
-                pL:Disconnect()
-                return 
-            end 
-            for _,target in pairs(game.Players:GetPlayers()) do 
-                if target ~= game.Players.LocalPlayer and target.Character and target.Character:FindFirstChild("Humanoid") and target.Character.Humanoid.Health > 0 then 
-                    pcall(function()
-                        for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do 
-                            if v:IsA("Tool") and v.Name == "Punch" then 
-                                game.Players.LocalPlayer.Character.Humanoid:EquipTool(v)
-                            end 
-                        end 
-                        local p = game.Players.LocalPlayer.Character:FindFirstChild("Punch") or game.Players.LocalPlayer.Backpack:FindFirstChild("Punch")
-                        if p then 
-                            p.Parent = game.Players.LocalPlayer.Character
-                            p:Activate()
-                        end
-                        local head = target.Character:FindFirstChild("Head")
-                        local lchar = game.Players.LocalPlayer.Character 
-                        local hand = lchar and lchar:FindFirstChild("LeftHand")
-                        if head and hand then 
-                            firetouchinterest(head, hand, 0)
-                            wait(0.01)
-                            firetouchinterest(head, hand, 1)
-                        end 
-                    end)
-                end 
-            end 
-            wait(0.1)
-        end)
-        table.insert(AutoStates.AutoKillReportLoops3, pL)
+        end
     end
 })
+
+if config.AutoKillReport3 then
+    AutoStates.AutoKillReport3 = true
+    StartKillLoop()
+end
 
 local serverSection = B:Section({Title = "切服", Opened = true})
 
