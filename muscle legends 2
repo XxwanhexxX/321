@@ -1,33 +1,16 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
-if getgenv().UI_Window then
-    pcall(function()
-        getgenv().UI_Window:Close()
-    end)
-    getgenv().UI_Window = nil
-end
-
-if getgenv().ScriptLoaded then
-    pcall(function()
-        if getgenv().UI_Window then
-            getgenv().UI_Window:Close()
-        end
-    end)
-    return
-end
-getgenv().ScriptLoaded = true
 
 local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
 
 game.Players.LocalPlayer.OnTeleport:Connect(function(state)
     if state == Enum.TeleportState.Started then
-        getgenv().ScriptLoaded = false
         getgenv().UI_Window = nil
     end
 end)
 
 if queue_on_teleport then
-    queue_on_teleport("getgenv().ScriptLoaded = false; getgenv().UI_Window = nil; loadstring(game:HttpGet('" .. ScriptUrl .. "'))()")
+    queue_on_teleport("getgenv().UI_Window = nil; loadstring(game:HttpGet('" .. ScriptUrl .. "'))()")
 end
 
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
@@ -79,7 +62,6 @@ function createUI()
             getgenv().UI_Window:Close()
         end)
         getgenv().UI_Window = nil
-        return
     end
 
     local Window = WindUI:CreateWindow({
@@ -120,7 +102,6 @@ function createUI()
 
     Window:OnClose(function()
         getgenv().UI_Window = nil
-        getgenv().ScriptLoaded = false
     end)
 
 Window:CreateTopbarButton("ThemeToggle", "moon", function()
