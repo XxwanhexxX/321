@@ -1,60 +1,22 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
+if getgenv().UI_Window then
+    pcall(function()
+        getgenv().UI_Window:Close()
+    end)
+end
+
 local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
 
-if getgenv().IY_LOADED then
-    pcall(function()
-        if getgenv().UI_Window then
-            getgenv().UI_Window:Close()
-        end
-    end)
-    return
-end
-getgenv().IY_LOADED = true
+game.Players.LocalPlayer.OnTeleport:Connect(function(state)
+    if state == Enum.TeleportState.Started then
+        getgenv().ScriptLoaded = false
+    end
+end)
 
 if queue_on_teleport then
     queue_on_teleport("loadstring(game:HttpGet('" .. ScriptUrl .. "'))()")
 end
-
-local ConfigPath = "刷业报配置"
-local HttpService = game:GetService("HttpService")
-
-local defaultConfig = {
-    AutoKillReport3 = false,
-    AutoRejoinTimer = false,
-    AutoRejoinOnDeath = false
-}
-
-local config = {}
-
-local function loadConfig()
-    if isfile and isfile(ConfigPath) then
-        local success, data = pcall(function()
-            return HttpService:JSONDecode(readfile(ConfigPath))
-        end)
-        if success and data then
-            for k, v in pairs(defaultConfig) do
-                if data[k] ~= nil then
-                    defaultConfig[k] = data[k]
-                end
-            end
-        end
-    end
-    for k, v in pairs(defaultConfig) do
-        config[k] = v
-    end
-    return config
-end
-
-local function saveConfig()
-    if writefile then
-        pcall(function()
-            writefile(ConfigPath, HttpService:JSONEncode(config))
-        end)
-    end
-end
-
-loadConfig()
 
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
 
@@ -97,7 +59,6 @@ function createUI()
 
     Window:OnClose(function()
         getgenv().UI_Window = nil
-        getgenv().IY_LOADED = false
     end)
 
 Window:CreateTopbarButton("ThemeToggle", "moon", function()
@@ -193,10 +154,8 @@ end)
 
 A:Toggle({
     Title = "自动刷业报",
-    Default = config.AutoKillReport3,
+    Default = AutoStates.AutoKillReport3,
     Callback = function(state)
-        config.AutoKillReport3 = state
-        saveConfig()
         AutoStates.AutoKillReport3 = state
         if AutoStates.AutoKillReportLoops3 then 
             for _,c in pairs(AutoStates.AutoKillReportLoops3) do 
@@ -276,10 +235,8 @@ serverSection:Button({
 
 serverSection:Toggle({
     Title = "30秒换服",
-    Default = config.AutoRejoinTimer,
+    Default = false,
     Callback = function(state)
-        config.AutoRejoinTimer = state
-        saveConfig()
         getgenv().AutoRejoinTimer = state
         if state then
             spawn(function()
@@ -311,10 +268,8 @@ serverSection:Toggle({
 
 serverSection:Toggle({
     Title = "死亡换服",
-    Default = config.AutoRejoinOnDeath,
+    Default = false,
     Callback = function(state)
-        config.AutoRejoinOnDeath = state
-        saveConfig()
         getgenv().AutoRejoinOnDeath = state
         if state then
             spawn(function()
