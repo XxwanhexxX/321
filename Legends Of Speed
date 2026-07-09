@@ -1,4 +1,4 @@
--- 拿去缝合并圈钱的你妈死了
+-- 使用的是原生UI库你可以改为你自己的UI库
 -- 可以二改不可以拿去圈钱
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
 local Confirmed = false
