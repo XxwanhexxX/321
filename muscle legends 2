@@ -1,4 +1,3 @@
--- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
 
 local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
@@ -15,7 +14,7 @@ end
 
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
 
-local ConfigPath = "workspace/甘城配置.json"
+local ConfigPath = "自动刷业报/配置.json"
 local HttpService = game:GetService("HttpService")
 
 local defaultConfig = {
