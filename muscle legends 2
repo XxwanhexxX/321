@@ -27,7 +27,7 @@ game.Players.LocalPlayer.OnTeleport:Connect(function(state)
 end)
 
 if queue_on_teleport then
-    queue_on_teleport("loadstring(game:HttpGet('" .. ScriptUrl .. "'))()")
+    queue_on_teleport("getgenv().ScriptLoaded = false; getgenv().UI_Window = nil; loadstring(game:HttpGet('" .. ScriptUrl .. "'))()")
 end
 
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/main/dist/main.lua"))()
