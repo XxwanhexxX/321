@@ -1,11 +1,10 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
--- ===== 检测重复UI =====
 if getgenv().UI_Window then
     pcall(function()
         getgenv().UI_Window:Close()
-        getgenv().UI_Window = nil
     end)
+    getgenv().UI_Window = nil
 end
 
 if getgenv().ScriptLoaded then
@@ -17,7 +16,6 @@ if getgenv().ScriptLoaded then
     return
 end
 getgenv().ScriptLoaded = true
--- ===== 检测重复UI结束 =====
 
 local ScriptUrl = "https://raw.githubusercontent.com/XxwanhexxX/321/refs/heads/main/muscle%20legends%202"
 
@@ -76,7 +74,6 @@ end
 loadConfig()
 
 function createUI()
-    -- ===== 再次检测，防止重复创建 =====
     if getgenv().UI_Window then
         pcall(function()
             getgenv().UI_Window:Close()
@@ -84,7 +81,6 @@ function createUI()
         getgenv().UI_Window = nil
         return
     end
-    -- ===== 检测结束 =====
 
     local Window = WindUI:CreateWindow({
         Title = '甘城',
