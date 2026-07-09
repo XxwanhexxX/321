@@ -1,43 +1,5 @@
 -- 拿去缝合并圈钱的你妈死了
 -- 可以二改不可以拿去圈钱
-local ConfigPath = "刷业报配置"
-local HttpService = game:GetService("HttpService")
-
-local defaultConfig = {
-    AutoKillReport3 = false
-}
-
-local config = {}
-
-local function loadConfig()
-    if isfile and isfile(ConfigPath) then
-        local success, data = pcall(function()
-            return HttpService:JSONDecode(readfile(ConfigPath))
-        end)
-        if success and data then
-            for k, v in pairs(defaultConfig) do
-                if data[k] ~= nil then
-                    defaultConfig[k] = data[k]
-                end
-            end
-        end
-    end
-    for k, v in pairs(defaultConfig) do
-        config[k] = v
-    end
-    return config
-end
-
-local function saveConfig()
-    if writefile then
-        pcall(function()
-            writefile(ConfigPath, HttpService:JSONEncode(config))
-        end)
-    end
-end
-
-loadConfig()
-
 if getgenv().UI_Window then
     pcall(function()
         getgenv().UI_Window:Close()
@@ -162,6 +124,7 @@ local function AddTab(section, title, icon)
 end
 
 local A = AddTab(LockSection, "刷业报", "swords")
+local B = AddTab(LockSection, "服务器", "server")
 
 A:Select()
 
@@ -191,10 +154,8 @@ end)
 
 A:Toggle({
     Title = "自动刷业报",
-    Default = config.AutoKillReport3,
+    Default = AutoStates.AutoKillReport3,
     Callback = function(state)
-        config.AutoKillReport3 = state
-        saveConfig()
         AutoStates.AutoKillReport3 = state
         if AutoStates.AutoKillReportLoops3 then 
             for _,c in pairs(AutoStates.AutoKillReportLoops3) do 
@@ -244,6 +205,101 @@ A:Toggle({
             wait(0.1)
         end)
         table.insert(AutoStates.AutoKillReportLoops3, pL)
+    end
+})
+
+local serverSection = B:Section({Title = "切服", Opened = true})
+
+serverSection:Button({
+    Title = "点击换服",
+    Callback = function()
+        local HttpService = game:GetService("HttpService")
+        local request = syn and syn.request or http and http.request or http_request or request or httprequest
+        
+        local response = HttpService:JSONDecode(
+            request({
+                Url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100&excludeFullGames=true",
+                Method = "GET"
+            }).Body
+        )
+        
+        local servers = response.data
+        if servers and #servers > 0 then
+            local target = servers[math.random(1, #servers)]
+            if target and target.id then
+                game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, target.id, game:GetService("Players").LocalPlayer)
+            end
+        end
+    end
+})
+
+serverSection:Toggle({
+    Title = "30秒换服",
+    Default = false,
+    Callback = function(state)
+        getgenv().AutoRejoinTimer = state
+        if state then
+            spawn(function()
+                while getgenv().AutoRejoinTimer do
+                    wait(30)
+                    local HttpService = game:GetService("HttpService")
+                    local request = syn and syn.request or http and http.request or http_request or request or httprequest
+                    
+                    local response = HttpService:JSONDecode(
+                        request({
+                            Url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100&excludeFullGames=true",
+                            Method = "GET"
+                        }).Body
+                    )
+                    
+                    local servers = response.data
+                    if servers and #servers > 0 then
+                        local target = servers[math.random(1, #servers)]
+                        if target and target.id then
+                            game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, target.id, game:GetService("Players").LocalPlayer)
+                        end
+                    end
+                    break
+                end
+            end)
+        end
+    end
+})
+
+serverSection:Toggle({
+    Title = "死亡换服",
+    Default = false,
+    Callback = function(state)
+        getgenv().AutoRejoinOnDeath = state
+        if state then
+            spawn(function()
+                while getgenv().AutoRejoinOnDeath do
+                    local player = game.Players.LocalPlayer
+                    local character = player.Character
+                    if character and character:FindFirstChild("Humanoid") and character.Humanoid.Health <= 0 then
+                        local HttpService = game:GetService("HttpService")
+                        local request = syn and syn.request or http and http.request or http_request or request or httprequest
+                        
+                        local response = HttpService:JSONDecode(
+                            request({
+                                Url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100&excludeFullGames=true",
+                                Method = "GET"
+                            }).Body
+                        )
+                        
+                        local servers = response.data
+                        if servers and #servers > 0 then
+                            local target = servers[math.random(1, #servers)]
+                            if target and target.id then
+                                game:GetService("TeleportService"):TeleportToPlaceInstance(game.PlaceId, target.id, game:GetService("Players").LocalPlayer)
+                            end
+                        end
+                        break
+                    end
+                    wait(0.5)
+                end
+            end)
+        end
     end
 })
 
