@@ -1,0 +1,442 @@
+-- 可以二改不可以拿去圈钱
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
+local Confirmed = false
+
+local gradientColors = {
+    "rgb(240, 248, 255)",
+    "rgb(224, 240, 255)",
+    "rgb(209, 232, 255)",
+    "rgb(193, 224, 255)",
+    "rgb(178, 216, 255)",
+    "rgb(162, 208, 255)",
+    "rgb(147, 200, 255)",
+    "rgb(131, 192, 255)",
+    "rgb(116, 184, 255)",
+    "rgb(100, 176, 255)"
+}
+
+local username = game.Players.LocalPlayer.Name
+local coloredUsername = ""
+for i = 1, #username do
+    local colorIndex = (i - 1) % #gradientColors + 1
+    coloredUsername = coloredUsername .. '<font color="' .. gradientColors[colorIndex] .. '">' .. username:sub(i, i) .. '</font>'
+end
+
+local version = "v1.2.4"
+local coloredVersion = ""
+for i = 1, #version do
+    local colorIndex = (i - 1) % #gradientColors + 1
+    coloredVersion = coloredVersion .. '<font color="' .. gradientColors[colorIndex] .. '">' .. version:sub(i, i) .. '</font>'
+end
+
+WindUI:Popup({
+    Title = '<font color="' .. gradientColors[1] .. '">甘</font><font color="' .. gradientColors[5] .. '">城</font>',
+    IconThemed = true,
+    Content = "尊敬的用户 " .. coloredUsername .. " \n此脚本完全免费\n请勿拿去圈钱\n感谢您的使用\n现已支持开源",
+    Buttons = {
+        {
+            Title = "取消",
+            Callback = function() end,
+            Variant = "Secondary",
+        },
+        {
+            Title = "执行",
+            Icon = "arrow-right",
+            Callback = function() 
+                Confirmed = true
+                createUI()
+            end,
+            Variant = "Primary",
+        }
+    }
+})
+
+function createUI()
+    local Window = WindUI:CreateWindow({
+        Title = '甘城',
+        Icon = "crown",
+        IconThemed = true,
+        Author = "v2.0.0",
+        Folder = "CloudHub",
+        Size = UDim2.fromOffset(580, 440),
+        Transparent = true,
+        Theme = "Dark",
+        HideSearchBar = false,
+        Resizable = true,
+        Background = "https://raw.githubusercontent.com/mtaskhh/script/refs/heads/Other/retouch_2025101321572104.jpg",
+        BackgroundImageTransparency = 0.5,
+        Search = {
+            Enabled = true,
+            Placeholder = "搜索...",
+            Callback = function(searchText)
+                print("搜索功能:", searchText)
+            end
+        },
+        User = {
+            Enabled = true,
+            Callback = function()
+                WindUI:Notify({
+                    Title = "玩家信息",
+                    Content = "玩家名称：" .. game.Players.LocalPlayer.Name,
+                    Duration = 2,
+                    Icon = "user"
+                })
+            end
+        },
+        SideBarWidth = 250
+    })
+
+Window:CreateTopbarButton("ThemeToggle", "moon", function()
+    local currentTheme = WindUI:GetCurrentTheme()
+    if currentTheme == "Light" then
+        WindUI:SetTheme("Dark")
+        WindUI:Notify({
+            Title = "已切换为光亮黑暗主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:moon"
+        })
+    else
+        WindUI:SetTheme("Light")
+        WindUI:Notify({
+            Title = "已切换为光亮主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:sun"
+        })
+    end
+end, 990)
+
+WindUI:SetNotificationLower(true)
+
+Window:Tag({
+        Title = "力量传奇-吃蛋和赠送蛋",
+        Color = Color3.fromHex("#00ffff") 
+    })
+    
+local tag = Window:Tag({
+    Title = os.date("%H:%M:%S"),
+    Color = Color3.fromHex("#00ffff")
+})
+
+spawn(function()
+    while Window do
+        task.wait(1)
+        tag:SetTitle(os.date("%H:%M:%S"))
+    end
+end)
+
+Window:EditOpenButton({
+    Title = "甘城",
+    Icon = "crown",
+    CornerRadius = UDim.new(0,26),
+    StrokeThickness = 4,
+    Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromHex("ADD8E6")),
+        ColorSequenceKeypoint.new(0.5, Color3.fromHex("4169E1")),
+        ColorSequenceKeypoint.new(1, Color3.fromHex("ADD8E6"))
+    }),
+    Draggable = true,
+})
+
+local LockSection = Window:Section({
+    Title = "主功能",
+    Opened = true,
+})
+
+local function AddTab(section, title, icon)
+    return section:Tab({Title = title, Icon = icon})
+end
+
+local A = AddTab(LockSection, "食物", "utensils")  
+local B = AddTab(LockSection, "赠送", "gift")
+
+
+A:Select()
+
+local sendSection = A:Section({Title = "普通类", Opened = true})
+
+A:Toggle({
+    Title = "自动使用所有奶昔",
+    Default = false,
+    Callback = function(state)
+        getgenv().AutoShake = state 
+        task.spawn(function()
+            while getgenv().AutoShake do 
+                task.wait()
+                local char = game.Players.LocalPlayer.Character 
+                if not char then task.wait(1) continue end 
+                local humanoid = char:FindFirstChild("Humanoid")
+                if not humanoid then continue end 
+                local shakeFound = false 
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do 
+                    if v:IsA("Tool") and (v.Name:find("奶昔") or v.Name:find("Shake") or v.Name:find("Milkshake")) then 
+                        humanoid:EquipTool(v)
+                        v:Activate()
+                        shakeFound = true 
+                        task.wait(1)
+                        break 
+                    end 
+                end 
+                if not shakeFound then 
+                    task.wait(3)
+                end 
+            end 
+        end)
+    end
+})
+
+A:Toggle({
+    Title = "自动使用所有能量棒",
+    Default = false,
+    Callback = function(state)
+        getgenv().AutoREB = state 
+        task.spawn(function()
+            while getgenv().AutoREB do 
+                task.wait()
+                local c = game.Players.LocalPlayer.Character 
+                if not c then task.wait(1) continue end 
+                local h = c:FindFirstChild("Humanoid")
+                if not h then continue end 
+                local f = false 
+                for i,v in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do 
+                    if v:IsA("Tool") and (v.Name:find("Protein Bar") or v.Name:find("能量棒") or v.Name:find("Energy Bar")) then 
+                        h:EquipTool(v)
+                        v:Activate()
+                        f = true 
+                        task.wait(1)
+                        break 
+                    end 
+                end 
+                if not f then 
+                    task.wait(3)
+                end 
+            end 
+        end)
+    end
+})
+
+local sendSection = A:Section({Title = "特殊类", Opened = true})
+
+A:Paragraph({
+    Title = "自动吃",
+    Desc = "检测增益效果时间为0自动吃\n可在器材上吃",
+})
+
+local autoTasks = {}
+
+local function getBoostValue(folderName)
+    local player = game.Players.LocalPlayer
+    local boostFolder = player:FindFirstChild("boostTimersFolder")
+    if boostFolder then
+        local target = boostFolder:FindFirstChild(folderName)
+        if target then
+            local val = target:FindFirstChild("Value")
+            if val then
+                return val.Value
+            end
+        end
+    end
+    return nil
+end
+
+local function autoUseItem(itemName, folderName, stateKey, cooldown)
+    cooldown = cooldown or 1
+    
+    if autoTasks[stateKey] then
+        task.cancel(autoTasks[stateKey])
+        autoTasks[stateKey] = nil
+    end
+    
+    getgenv()[stateKey] = state
+    
+    if state then
+        autoTasks[stateKey] = task.spawn(function()
+            while getgenv()[stateKey] do
+                local player = game.Players.LocalPlayer
+                local char = player.Character
+                if char then
+                    local humanoid = char:FindFirstChild("Humanoid")
+                    if humanoid then
+                        local boostVal = getBoostValue(folderName)
+                        
+                        if boostVal == -1 or boostVal == 0 or boostVal == nil then
+                            local used = false
+                            for _, v in pairs(player.Backpack:GetChildren()) do
+                                if v:IsA("Tool") and v.Name:find(itemName) then
+                                    humanoid:EquipTool(v)
+                                    task.wait(0.2)
+                                    v:Activate()
+                                    used = true
+                                    task.wait(cooldown)
+                                    break
+                                end
+                            end
+                            if not used then
+                                for _, v in pairs(char:GetChildren()) do
+                                    if v:IsA("Tool") and v.Name:find(itemName) then
+                                        v:Activate()
+                                        used = true
+                                        task.wait(cooldown)
+                                        break
+                                    end
+                                end
+                            end
+                        end
+                    end
+                end
+                task.wait(0.5)
+            end
+        end)
+    end
+end
+
+A:Toggle({
+    Title = "自动使用蛋白质蛋",
+    Default = false,
+    Callback = function(state)
+        autoUseItem("Protein Egg", "Protein Egg", "AutoProteinEgg", 1)
+    end
+})
+
+A:Toggle({
+    Title = "自动使用热带摇晃",
+    Default = false,
+    Callback = function(state)
+        autoUseItem("Tropical Shake", "Tropical Shake", "AutoTropicalShake", 1)
+    end
+})
+
+local sendSection = B:Section({Title = "送蛋", Opened = true})
+local targetPlayer = ""
+local sendNum = 0
+local eggParagraph = nil
+local isSending = false
+
+local function getEggCount()
+    local count = 0
+    local player = game:GetService("Players").LocalPlayer
+    local folder = player:FindFirstChild("consumablesFolder")
+    if folder then
+        for _, item in pairs(folder:GetChildren()) do
+            if item.Name == "Protein Egg" then
+                count = count + 1
+            end
+        end
+    end
+    return count
+end
+
+local function updateEggDisplay()
+    if eggParagraph then
+        eggParagraph:SetDesc(tostring(getEggCount()) .. " 个")
+    end
+end
+
+eggParagraph = sendSection:Paragraph({
+    Title = "剩余蛋数量",
+    Desc = tostring(getEggCount()) .. " 个",
+})
+
+sendSection:Input({
+    Title = "送蛋数量",
+    Desc = "输入送蛋数量",
+    Callback = function(value)
+        sendNum = tonumber(value) or 0
+    end
+})
+
+sendSection:Input({
+    Title = "用户名",
+    Desc = "输入对面用户名",
+    Live = true,
+    Callback = function(value)
+        targetPlayer = value
+    end
+})
+
+local function sendEgg()
+    if not targetPlayer or targetPlayer == "" then return false end
+    if sendNum <= 0 then return false end
+    if getEggCount() <= 0 then return false end
+    
+    local target = game:GetService("Players"):FindFirstChild(targetPlayer)
+    if not target then return false end
+    
+    local player = game:GetService("Players").LocalPlayer
+    local folder = player:FindFirstChild("consumablesFolder")
+    if not folder then return false end
+    
+    local egg = nil
+    for _, item in pairs(folder:GetChildren()) do
+        if item.Name == "Protein Egg" then
+            egg = item
+            break
+        end
+    end
+    if not egg then return false end
+    
+    local args = {"giftRequest", target, egg}
+    game:GetService("ReplicatedStorage"):WaitForChild("rEvents"):WaitForChild("giftRemote"):InvokeServer(unpack(args))
+    updateEggDisplay()
+    return true
+end
+
+sendSection:Button({
+    Title = "开始送蛋",
+    Callback = function()
+        if isSending then return end
+        
+        if not targetPlayer or targetPlayer == "" then
+            return
+        end
+        
+        local target = game:GetService("Players"):FindFirstChild(targetPlayer)
+        if not target then
+            return
+        end
+        
+        if sendNum <= 0 then
+            return
+        end
+        
+        if getEggCount() <= 0 then
+            return
+        end
+        
+        isSending = true
+        task.spawn(function()
+            local sent = 0
+            for i = 1, sendNum do
+                if getEggCount() <= 0 then break end
+                if not game:GetService("Players"):FindFirstChild(targetPlayer) then break end
+                if sendEgg() then
+                    sent = sent + 1
+                else
+                    break
+                end
+                task.wait(0.1)
+            end
+            isSending = false
+        end)
+    end
+})
+
+task.spawn(function()
+    while true do
+        task.wait(0.1)
+        if eggParagraph then
+            updateEggDisplay()
+        end
+    end
+end)
+
+print("Anti Afk On")
+local vu = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:Connect(function() 
+    vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+    task.wait(1)
+    vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+
+end
