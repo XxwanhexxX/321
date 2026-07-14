@@ -157,24 +157,13 @@ local E = AddTab(LockSection, "传送", "send")
 local F = AddTab(LockSection, "重生", "rotate-ccw")
 local G = AddTab(LockSection, "修改", "pencil")
 local H = AddTab(LockSection, "宠物", "dog")
-local I = AddTab(LockSection, "说明", "info")
+local I = AddTab(LockSection, "提示", "info")
 local J = AddTab(LockSection, "通用", "settings")
 local K = AddTab(LockSection, "服务器", "server")
 
-local extraSection = A:Section({Title = "额外", Opened = true})
+A:Select()
 
-extraSection:Button({
-    Title = "抽奖一次",
-    Callback = function()
-        game:GetService("ReplicatedStorage").rEvents.openFortuneWheelRemote:InvokeServer("openFortuneWheel", game:GetService("ReplicatedStorage").fortuneWheelChances["Fortune Wheel"])
-        WindUI:Notify({
-            Title = "甘城",
-            Content = "抽奖成功 请确保你有抽奖次数",
-            Duration = 3,
-            Icon = "gift"
-        })
-    end
-})
+local extraSection = A:Section({Title = "主要", Opened = true})
 
 extraSection:Button({
     Title = "收集全部宝箱",
@@ -183,7 +172,7 @@ extraSection:Button({
             game.ReplicatedStorage.rEvents.checkChestRemote:InvokeServer(v.Name)
         end
         WindUI:Notify({
-            Title = "甘城",
+            Title = "提示",
             Content = "已收集全部宝箱",
             Duration = 3,
             Icon = "gift"
@@ -198,8 +187,8 @@ extraSection:Button({
             v.Parent = game.Players.LocalPlayer.ownedGamepasses
         end
         WindUI:Notify({
-            Title = "甘城",
-            Content = "捡一个球就可以看到全部通行证",
+            Title = "提示",
+            Content = "走几步即可",
             Duration = 3,
             Icon = "crown"
         })
@@ -233,6 +222,24 @@ extraSection:Toggle({
 })
 
 extraSection:Toggle({
+    Title = "自动抽奖",
+    Default = false,
+    Callback = function(state)
+        Interstellar.autoSpin = state
+        if state then
+            spawn(function()
+                while Interstellar.autoSpin do
+                    pcall(function()
+                        game:GetService("ReplicatedStorage").rEvents.openFortuneWheelRemote:InvokeServer("openFortuneWheel", game:GetService("ReplicatedStorage").fortuneWheelChances["Fortune Wheel"])
+                    end)
+                    task.wait(1)
+                end
+            end)
+        end
+    end
+})
+
+extraSection:Toggle({
     Title = "自动收集奖励",
     Default = false,
     Callback = function(state)
@@ -256,7 +263,7 @@ extraSection:Toggle({
     end
 })
 
-local cardPetSection1 = B:Section({Title = "卡宠模式1", Opened = true})
+local cardPetSection1 = B:Section({Title = "模式一", Opened = true})
 
 local Interstellar = {
     area = "City",
@@ -275,8 +282,8 @@ cardPetSection1:Dropdown({
 })
 
 cardPetSection1:Paragraph({
-    Title = "优化版说明",
-    Desc = "请先选择地区否则获球地方将默认城市\n建议用经验球卡宠\n最稳定的一个喵",
+    Title = "提示",
+    Desc = "请选择地区\n默认为城市\n没无限的用经验球\n建议用兔子和火焰刺猬来卡\n卡之前看重生说明",
     ThumbnailSize = 190,
 })
 
@@ -288,65 +295,6 @@ end
 game:GetService("RunService").Heartbeat:Connect(function()
 checkMaxLevel()
 end)
-
-cardPetSection1:Toggle({
-    Title = "紫球",
-    Default = false,
-    Callback = function(state)
-        Interstellar.getorb = state
-        if state then
-            spawn(function()
-                while Interstellar.getorb do
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
-                    wait(0.05)
-                end
-            end)
-        end
-    end
-})
 
 cardPetSection1:Toggle({
     Title = "红球",
@@ -371,40 +319,7 @@ cardPetSection1:Toggle({
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
-                    wait(0.05)
+                    wait(0.03)
                 end
             end)
         end
@@ -434,22 +349,7 @@ cardPetSection1:Toggle({
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
-                    wait(0.05)
+                    wait(0.03)
                 end
             end)
         end
@@ -479,22 +379,37 @@ cardPetSection1:Toggle({
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
-                    wait(0.05)
+                    wait(0.03)
+                end
+            end)
+        end
+    end
+})
+
+cardPetSection1:Toggle({
+    Title = "紫球",
+    Default = false,
+    Callback = function(state)
+        Interstellar.getorb = state
+        if state then
+            spawn(function()
+                while Interstellar.getorb do
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    wait(0.03)
                 end
             end)
         end
@@ -545,14 +460,28 @@ cardPetSection1:Toggle({
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
-                    wait(0.05)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Yellow Orb", Interstellar.area)
+                    wait(0.06)
                 end
             end)
         end
     end
 })
 
-local cardPetSection2 = B:Section({Title = "自定义-卡宠模式2", Opened = true})
+local cardPetSection2 = B:Section({Title = "模式二", Opened = true})
 
 local Interstellar2 = {
     area = "City",
@@ -578,8 +507,8 @@ game:GetService("RunService").Heartbeat:Connect(function()
     checkMaxLevel2()
 end)
 
-local areaDisplayNames = {"城市", "雪城", "熔岩城", "沙漠", "太空", "传奇公路", "丛林"}
-local areaOptions = {"City", "Snow City", "Magma City", "Desert", "Space", "Legends Highway", "Speed Jungle"}
+local areaOptions = {"City","Snow City","Magma City","Legends Highway","Speed Jungle","Desert","Space"}
+local areaDisplayNames = {"城市","雪城","熔岩城","传奇公路","丛林","沙漠","太空"}
 local orbDisplayNames = {"紫球", "红球", "蓝球", "橙球", "经验球"}
 local orbTypes = {"Ethereal Orb", "Red Orb", "Blue Orb", "Orange Orb", "Yellow Orb"}
 
@@ -612,21 +541,21 @@ cardPetSection2:Dropdown({
 })
 
 cardPetSection2:Paragraph({
-    Title = "卡宠倍率",
-    Desc = "不完全优化\n请先选择地区否则获球地方将默认城市\n倍率过高可能会卡",
+    Title = "提示",
+    Desc = "请输入文本\n请选择地区\n默认为城市\n倍速过高会卡",
     ThumbnailSize = 190,
 })
 
 cardPetSection2:Input({
-    Title = "输入倍率",
-    Desc = "默认1",
+    Title = "输入倍速",
+    Desc = "默认为1",
     Callback = function(value)
         Interstellar2.multiplier = math.clamp(tonumber(value) or 1, 1, 10000)
     end
 })
 
 cardPetSection2:Toggle({
-    Title = "卡宠速度总开关",
+    Title = "倍速卡宠总开关",
     Default = false,
     Callback = function(state)
         Interstellar2.rateEnabled = state
@@ -634,14 +563,6 @@ cardPetSection2:Toggle({
             spawn(function()
                 local e = game:GetService("ReplicatedStorage").rEvents.orbEvent
                 local e2 = game:GetService("ReplicatedStorage").rEvents.orbEvent
-                local e3 = game:GetService("ReplicatedStorage").rEvents.orbEvent
-                local e4 = game:GetService("ReplicatedStorage").rEvents.orbEvent
-                local e5 = game:GetService("ReplicatedStorage").rEvents.orbEvent
-                local e6 = game:GetService("ReplicatedStorage").rEvents.orbEvent
-                local e7 = game:GetService("ReplicatedStorage").rEvents.orbEvent
-                local e8 = game:GetService("ReplicatedStorage").rEvents.orbEvent
-                local e9 = game:GetService("ReplicatedStorage").rEvents.orbEvent
-                local e10 = game:GetService("ReplicatedStorage").rEvents.orbEvent
                 while Interstellar2.rateEnabled do
                     if Interstellar2.isMaxLevel then
                         Interstellar2.rateEnabled = false
@@ -659,11 +580,11 @@ cardPetSection2:Toggle({
     end
 })
 
-local gemSection = C:Section({Title = "宝石模式", Opened = true})
+local gemSection = C:Section({Title = "宝石收集", Opened = true})
 
 gemSection:Paragraph({
-    Title = "宝石模式说明",
-    Desc = "卡宠后效果显著\n建议在卡宠状态下使用",
+    Title = "提示",
+    Desc = "卡宠后效果显著\n建议在卡宠后使用",
     ThumbnailSize = 190,
 })
 
@@ -839,7 +760,7 @@ raceSection:Button({
 })
 
 raceSection:Toggle({
-    Title = "自动比赛胜利(传送)",
+    Title = "自动胜利[传送]",
     Default = false,
     Callback = function(state)
         Interstellar.mainexe = state
@@ -908,7 +829,7 @@ teleportSection:Button({
     end
 })
 
-local rebirthSection1 = F:Section({Title = "模式1", Opened = true})
+local rebirthSection1 = F:Section({Title = "模式一", Opened = true})
 
 rebirthSection1:Toggle({
     Title = "自动重生",
@@ -928,10 +849,10 @@ rebirthSection1:Toggle({
     end
 })
 
-local rebirthSection2 = F:Section({Title = "模式2", Opened = true})
+local rebirthSection2 = F:Section({Title = "模式二", Opened = true})
 
 rebirthSection2:Input({
-    Title = "自定义重生次数",
+    Title = "自定义重生",
     Desc = "次数",
     Callback = function(value)
         Interstellar.birth = tonumber(value) or 0
@@ -939,7 +860,7 @@ rebirthSection2:Input({
 })
 
 rebirthSection2:Toggle({
-    Title = "重生到指定的重生次数",
+    Title = "重生到指定的次数",
     Default = false,
     Callback = function(state)
         Interstellar.autobirth = state
@@ -1052,7 +973,7 @@ local fixLoop = nil
 local isFixing = false
 
 modifySection:Toggle({
-    Title = "先输入数值 再开这个锁定",
+    Title = "先输入数值再锁定",
     Default = false,
     Callback = function(state)
         isFixing = state
@@ -1091,23 +1012,24 @@ modifySection:Toggle({
     end
 })
 
-local petShopSection = H:Section({Title = "购买模式", Opened = true})
+local petShopSection = H:Section({Title = "购买", Opened = true})
 
 local petMap = {
     ["斯威夫特武士"] = "Swift Samurai",
+    ["终极超速小兔"] = "Ultimate Overdrive Bunny",
     ["金色尾巴"] = "Hyperblast",
     ["彩虹尾巴"] = "Rainbow Steps",
     ["龙火"] = "Dragonfire",
     ["火焰刺猬"] = "Flaming Hedgehog",
     ["电光雷宠"] = "Electro Golem"
 }
-local petDisplayNames = {"斯威夫特武士", "金色尾巴", "彩虹尾巴", "龙火", "火焰刺猬", "电光雷宠"}
+local petDisplayNames = {"斯威夫特武士", "终极超速小兔", "金色尾巴", "彩虹尾巴", "龙火", "火焰刺猬", "电光雷宠"}
 
 local BuyPetShop = ""
 
 petShopSection:Paragraph({
-    Title = "关于直接购买宠物",
-    Desc = "建议先刷卡宠然后再购买\n你得保证你有充足的宝石\n购买一个宠物就值0.4亿左右 否则购买失败\n电光雷宠和火焰刺猬只能在太空地区买\n中间三个都是尾迹",
+    Title = "提示",
+    Desc = "得有充足的宝石\n购买一个0.4亿左右\n电光雷宠和火焰刺猬只能在太空地区买\n中间三个都是尾迹",
     ThumbnailSize = 200,
 })
 
@@ -1157,9 +1079,10 @@ local evolveSection = H:Section({Title = "进化", Opened = true})
 local petEvolveMap = {
     ["斯威夫特武士"] = "Swift Samurai",
     ["火焰刺猬"] = "Flaming Hedgehog",
-    ["电光雷宠"] = "Electro Golem"
+    ["电光雷宠"] = "Electro Golem",
+    ["终极超速小兔"] = "Ultimate Overdrive Bunny"
 }
-local petEvolveList = {"斯威夫特武士", "火焰刺猬", "电光雷宠"}
+local petEvolveList = {"斯威夫特武士", "火焰刺猬", "电光雷宠", "终极超速小兔"}
 local EvolvePet = ""
 
 Interstellar.evolvepet = false
@@ -1191,29 +1114,15 @@ evolveSection:Toggle({
     end
 })
 
-local infoSection = I:Section({Title = "卡宠重生次数", Opened = true})
+local infoSection = I:Section({Title = "卡宠建议的重生次数说明", Opened = true})
 
 infoSection:Paragraph({
     Title = "适合卡宠的重生次数",
-    Desc = "末尾有个奇数9的都行\n有钱的买个无限等级挂机\n建议用经验球刷\n\n重生：9\n重生：19\n重生：29\n重生：39\n重生：49\n重生：59\n重生：69\n重生：79\n重生：89\n重生：99\n重生：109-199\n重生：209-299\n重生：309-399\n重生：409-599\n重生：609-699\n重生：709-799\n重生：809-899\n重生：909-999\n\n后续也就那样",
+    Desc = "末尾有个奇数9的都行\n建议买个无限等级\n用任何球卡都行\n卡前先适配宠物\n\n重生：9\n重生：19\n重生：29\n重生：39\n重生：49\n重生：59\n重生：69\n重生：79\n重生：89\n重生：99\n重生：109-199\n重生：209-299\n重生：309-399\n重生：409-599\n重生：609-699\n重生：709-799\n重生：809-899\n重生：909-999\n\n后续也就那样",
     ThumbnailSize = 190,
 })
 
-local settingsSection = J:Section({Title = "画质功能", Opened = true})
-
-settingsSection:Toggle({
-    Title = "去雾",
-    Default = false,
-    Callback = function(state)
-        if state then
-            game.Lighting.FogStart = 3276634343
-            game.Lighting.FogEnd = 3276734343
-        else
-            game.Lighting.FogStart = 3276634343
-            game.Lighting.FogEnd = 3276634343
-        end
-    end
-})
+local settingsSection = J:Section({Title = "画质", Opened = true})
 
 settingsSection:Toggle({
     Title = "夜视",
@@ -1222,8 +1131,8 @@ settingsSection:Toggle({
         local Lighting = game:GetService("Lighting")
         if state then
             Lighting.Brightness = 4
-            Lighting.Ambient = Color3.new(0.4, 0.6, 0.4)
-            Lighting.ColorShift_Top = Color3.new(0.3, 0.5, 0.3)
+            Lighting.Ambient = Color3.new(1, 1, 1)
+            Lighting.ColorShift_Top = Color3.new(0, 0, 0)
         else
             Lighting.Brightness = 1
             Lighting.Ambient = Color3.new(0, 0, 0)
@@ -1233,6 +1142,15 @@ settingsSection:Toggle({
 })
 
 local otherSection = J:Section({Title = "常用功能", Opened = true})
+
+settingsSection:Button({
+    Title = "去雾",
+    Callback = function()
+        local Lighting = game:GetService("Lighting")
+        Lighting.FogStart = 3276634343
+        Lighting.FogEnd = 3276734343
+    end
+})
 
 otherSection:Toggle({
     Title = "穿墙",
@@ -1273,7 +1191,7 @@ local flySpeed = 150
 local flyMultiplier = 5
 
 otherSection:Slider({
-    Title = "飞行倍率",
+    Title = "飞行倍速",
     Step = 0.1,
     Value = {Min = 1, Max = 20, Default = 5},
     Callback = function(multiplier)
@@ -1369,12 +1287,36 @@ serverSection:Button({
 serverSection:Button({
     Title = "切换服务器",
     Callback = function()
-        game:GetService("TeleportService"):Teleport(game.PlaceId)
+        local HttpService = game:GetService("HttpService")
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        
+        local request = syn and syn.request or http and http.request or http_request or request or httprequest
+        
+        local success, result = pcall(function()
+            local response = request({
+                Url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100&excludeFullGames=true",
+                Method = "GET"
+            })
+            return HttpService:JSONDecode(response.Body)
+        end)
+        
+        if success and result and result.data and #result.data > 0 then
+            local target = result.data[math.random(1, #result.data)]
+            if target and target.id then
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, target.id, LocalPlayer)
+            else
+                TeleportService:Teleport(game.PlaceId, LocalPlayer)
+            end
+        else
+            TeleportService:Teleport(game.PlaceId, LocalPlayer)
+        end
     end
 })
 
 WindUI:Notify({
-    Title = "甘城",
+    Title = "反挂机",
     Content = "反挂机已开启",
     Duration = 3,
     Icon = "shield-check"
