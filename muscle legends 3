@@ -110,7 +110,7 @@ end, 990)
 WindUI:SetNotificationLower(true)
 
 Window:Tag({
-        Title = "力量传奇-吃蛋和赠送蛋",
+        Title = "力量传奇吃蛋和赠送蛋",
         Color = Color3.fromHex("#00ffff") 
     })
     
@@ -154,7 +154,7 @@ local B = AddTab(LockSection, "赠送", "gift")
 
 A:Select()
 
-local sendSection = A:Section({Title = "普通类", Opened = true})
+local petShopSection = A:Section({Title = "普通的", Opened = true})
 
 A:Toggle({
     Title = "自动使用所有奶昔",
@@ -216,11 +216,11 @@ A:Toggle({
     end
 })
 
-local sendSection = A:Section({Title = "特殊类", Opened = true})
+local petShopSection = A:Section({Title = "特殊的", Opened = true})
 
 A:Paragraph({
     Title = "自动吃",
-    Desc = "检测增益效果时间为0自动吃\n可在器材上吃",
+    Desc = "检测效果时间为0自动吃\n可在器材上吃",
 })
 
 local autoTasks = {}
@@ -285,7 +285,7 @@ local function autoUseItem(itemName, folderName, stateKey, cooldown)
                         end
                     end
                 end
-                task.wait(0.5)
+                task.wait(0.05)
             end
         end)
     end
