@@ -1,3 +1,4 @@
+-- 用的是原生windUI库可以替换成你的
 -- 可以二改不可以拿去圈钱
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
 local Confirmed = false
@@ -154,7 +155,7 @@ local B = AddTab(LockSection, "赠送", "gift")
 
 A:Select()
 
-local petShopSection = A:Section({Title = "普通的", Opened = true})
+local sendSection = A:Section({Title = "普通的", Opened = true})
 
 A:Toggle({
     Title = "自动使用所有奶昔",
@@ -216,7 +217,7 @@ A:Toggle({
     end
 })
 
-local petShopSection = A:Section({Title = "特殊的", Opened = true})
+local sendSection = A:Section({Title = "特殊的", Opened = true})
 
 A:Paragraph({
     Title = "自动吃",
