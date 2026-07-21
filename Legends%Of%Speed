@@ -62,7 +62,7 @@ function createUI()
         Theme = "Dark",
         HideSearchBar = false,
         Resizable = true,
-        Background = "https://raw.githubusercontent.com/mtaskhh/script/refs/heads/Other/retouch_2025101321572104.jpg",
+        Background = "https://raw.githubusercontent.com/XxwanhexxX/UN/main/%E7%94%98%E5%9F%8E.png",
         BackgroundImageTransparency = 0.5,
         Search = {
             Enabled = true,
@@ -310,6 +310,11 @@ cardPetSection1:Toggle({
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Ethereal Orb", Interstellar.area)
                     wait(0.03)
                 end
             end)
@@ -325,6 +330,11 @@ cardPetSection1:Toggle({
         if state then
             spawn(function()
                 while Interstellar.getorb do
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Red Orb", Interstellar.area)
@@ -370,6 +380,11 @@ cardPetSection1:Toggle({
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Blue Orb", Interstellar.area)
                     wait(0.03)
                 end
             end)
@@ -385,6 +400,11 @@ cardPetSection1:Toggle({
         if state then
             spawn(function()
                 while Interstellar.getorb do
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
+                    game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
                     game.ReplicatedStorage.rEvents.orbEvent:FireServer("collectOrb", "Orange Orb", Interstellar.area)
@@ -617,7 +637,7 @@ gemSection:Toggle({
 })
 
 gemSection:Toggle({
-    Title = "熔岩宝石",
+    Title = "熔岩城宝石",
     Default = false,
     Callback = function(state)
         getgenv().sbsC = state
@@ -642,7 +662,7 @@ gemSection:Toggle({
 })
 
 gemSection:Toggle({
-    Title = "公路宝石",
+    Title = "传奇公路宝石",
     Default = false,
     Callback = function(state)
         getgenv().sbsD = state
