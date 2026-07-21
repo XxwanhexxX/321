@@ -1,5 +1,3 @@
--- 使用的是原生UI库你可以改为你自己的UI库
--- 可以二改不可以拿去圈钱
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
 local Confirmed = false
 
@@ -33,7 +31,7 @@ end
 WindUI:Popup({
     Title = '<font color="' .. gradientColors[1] .. '">甘</font><font color="' .. gradientColors[5] .. '">城</font>',
     IconThemed = true,
-    Content = "尊敬的用户 " .. coloredUsername .. " \n此脚本完全免费\n请勿拿去圈钱\n感谢您的使用\n现已支持开源",
+    Content = "尊敬的用户 " .. coloredUsername .. " \n此脚本完全免费\n源码获取访问脚本链接",
     Buttons = {
         {
             Title = "取消",
@@ -84,9 +82,8 @@ function createUI()
                 })
             end
         },
-        SideBarWidth = 250
+        SideBarWidth = 180
     })
-
 Window:CreateTopbarButton("ThemeToggle", "moon", function()
     local currentTheme = WindUI:GetCurrentTheme()
     if currentTheme == "Light" then
@@ -157,7 +154,7 @@ local E = AddTab(LockSection, "传送", "send")
 local F = AddTab(LockSection, "重生", "rotate-ccw")
 local G = AddTab(LockSection, "修改", "pencil")
 local H = AddTab(LockSection, "宠物", "dog")
-local I = AddTab(LockSection, "提示", "info")
+local I = AddTab(LockSection, "说明", "info")
 local J = AddTab(LockSection, "通用", "settings")
 local K = AddTab(LockSection, "服务器", "server")
 
@@ -270,8 +267,8 @@ local Interstellar = {
     getorb = false
 }
 
-local areaOptions = {"City","Snow City","Magma City","Desert","Space", "Legends Highway", "Speed Jungle"}
-local areaDisplayNames = {"城市","雪城","熔岩城","沙漠","太空","传奇公路","丛林"}
+local areaOptions = {"City","Snow City","Magma City","Legends Highway","Speed Jungle","Desert","Space"}
+local areaDisplayNames = {"城市","雪城","熔岩城","传奇公路","丛林","沙漠","太空"}
 cardPetSection1:Dropdown({
     Title = "选择地区",
     Values = areaDisplayNames,
@@ -279,12 +276,6 @@ cardPetSection1:Dropdown({
     Callback = function(Value)
         Interstellar.area = areaOptions[table.find(areaDisplayNames, Value)]
     end
-})
-
-cardPetSection1:Paragraph({
-    Title = "提示",
-    Desc = "请选择地区\n默认为城市\n没无限的用经验球\n建议用兔子和火焰刺猬来卡\n卡之前看重生说明",
-    ThumbnailSize = 190,
 })
 
 local function checkMaxLevel()
@@ -529,26 +520,21 @@ cardPetSection2:Dropdown({
 cardPetSection2:Dropdown({
     Title = "选择球类型",
     Values = orbDisplayNames,
-    Value = "经验球",
+    Value = "",
     Callback = function(Value)
         local idx = table.find(orbDisplayNames, Value)
         if idx then
             Interstellar2.orbType = orbTypes[idx]
         else
-            Interstellar2.orbType = "Yellow Orb"
+            Interstellar2.orbType = ""
         end
     end
-})
-
-cardPetSection2:Paragraph({
-    Title = "提示",
-    Desc = "请输入文本\n请选择地区\n默认为城市\n倍速过高会卡",
-    ThumbnailSize = 190,
 })
 
 cardPetSection2:Input({
     Title = "输入倍速",
     Desc = "默认为1",
+    Placeholder = "输入数值",
     Callback = function(value)
         Interstellar2.multiplier = math.clamp(tonumber(value) or 1, 1, 10000)
     end
@@ -579,12 +565,6 @@ cardPetSection2:Toggle({
 })
 
 local gemSection = C:Section({Title = "宝石收集", Opened = true})
-
-gemSection:Paragraph({
-    Title = "提示",
-    Desc = "卡宠后效果显著\n建议在卡宠后使用",
-    ThumbnailSize = 190,
-})
 
 gemSection:Toggle({
     Title = "城市宝石",
@@ -637,7 +617,7 @@ gemSection:Toggle({
 })
 
 gemSection:Toggle({
-    Title = "熔岩城宝石",
+    Title = "熔岩宝石",
     Default = false,
     Callback = function(state)
         getgenv().sbsC = state
@@ -662,7 +642,7 @@ gemSection:Toggle({
 })
 
 gemSection:Toggle({
-    Title = "传奇公路宝石",
+    Title = "公路宝石",
     Default = false,
     Callback = function(state)
         getgenv().sbsD = state
@@ -758,7 +738,7 @@ raceSection:Button({
 })
 
 raceSection:Toggle({
-    Title = "自动胜利[传送]",
+    Title = "自动胜利",
     Default = false,
     Callback = function(state)
         Interstellar.mainexe = state
@@ -852,6 +832,7 @@ local rebirthSection2 = F:Section({Title = "模式二", Opened = true})
 rebirthSection2:Input({
     Title = "自定义重生",
     Desc = "次数",
+    Placeholder = "输入数值",
     Callback = function(value)
         Interstellar.birth = tonumber(value) or 0
     end
@@ -955,84 +936,75 @@ modifySection:Input({
     end
 })
 
-modifySection:Divider()
+local petShopSection = H:Section({Title = "购买水晶", Opened = true})
 
-local fixValues = {
-    exp = 0,
-    level = 0,
-    races = 0,
-    hoops = 0,
-    rebirths = 0,
-    steps = 0,
-    gems = 0
+local crystalDisplayNames = {"300水晶 [城市]", "600水晶 [城市]", "1.2K水晶 [城市]", "2.5K水晶 [城市]", "4K水晶 [雪城]", "8K水晶 [熔岩城]", "8K水晶 [熔岩城]", "40K水晶 [沙漠]", "50K水晶 [沙漠]", "100K水晶 [传奇公路]", "150K水晶 [太空]", "1M水晶 [丛林]"}
+local crystalMap = {
+    ["300水晶 [城市]"] = "Red Crystal",
+    ["600水晶 [城市]"] = "Blue Crystal",
+    ["1.2K水晶 [城市]"] = "Yellow Crystal",
+    ["2.5K水晶 [城市]"] = "Lightning Crystal",
+    ["4K水晶 [雪城]"] = "Snow Crystal",
+    ["8K水晶 [熔岩城]"] = "Lava Crystal",
+    ["8K水晶 [熔岩城]"] = "Lightning Crystal",
+    ["40K水晶 [沙漠]"] = "Desert Crystal",
+    ["50K水晶 [沙漠]"] = "Electro Crystal",
+    ["100K水晶 [传奇公路]"] = "Electro Legends Crystal",
+    ["150K水晶 [太空]"] = "Alien Crystal",
+    ["1M水晶 [丛林]"] = "Jungle Crystal"
 }
 
-local fixLoop = nil
-local isFixing = false
+local selectedCrystal = ""
 
-modifySection:Toggle({
-    Title = "先输入数值再锁定",
+petShopSection:Dropdown({
+    Title = "选择水晶",
+    Values = crystalDisplayNames,
+    Value = "",
+    Callback = function(value)
+        selectedCrystal = crystalMap[value]
+    end
+})
+
+petShopSection:Button({
+    Title = "购买一次",
+    Callback = function()
+        game:GetService("ReplicatedStorage").rEvents.openCrystalRemote:InvokeServer("openCrystal", selectedCrystal)
+    end
+})
+
+petShopSection:Toggle({
+    Title = "自动购买",
     Default = false,
     Callback = function(state)
-        isFixing = state
+        getgenv().autoCrystal = state
         if state then
-            local player = game:GetService("Players").LocalPlayer
-            fixValues.exp = player.exp.Value
-            fixValues.level = player.level.Value
-            fixValues.races = player.leaderstats.Races.Value
-            fixValues.hoops = player.leaderstats.Hoops.Value
-            fixValues.rebirths = player.leaderstats.Rebirths.Value
-            fixValues.steps = player.leaderstats.Steps.Value
-            fixValues.gems = player.Gems.Value
-            
-            getgenv().FixModify = true
-            fixLoop = spawn(function()
-                while isFixing do
-                    pcall(function()
-                        local player = game:GetService("Players").LocalPlayer
-                        player.exp.Value = fixValues.exp
-                        player.level.Value = fixValues.level
-                        player.leaderstats.Races.Value = fixValues.races
-                        player.leaderstats.Hoops.Value = fixValues.hoops
-                        player.leaderstats.Rebirths.Value = fixValues.rebirths
-                        player.leaderstats.Steps.Value = fixValues.steps
-                        player.Gems.Value = fixValues.gems
-                    end)
-                    task.wait()
+            spawn(function()
+                while getgenv().autoCrystal do
+                    game:GetService("ReplicatedStorage").rEvents.openCrystalRemote:InvokeServer("openCrystal", selectedCrystal)
+                    task.wait(0.1)
                 end
             end)
-        else
-            getgenv().FixModify = false
-            if fixLoop then
-                fixLoop = nil
-            end
         end
     end
 })
 
-local petShopSection = H:Section({Title = "购买", Opened = true})
+local petShopSection = H:Section({Title = "购买宠物", Opened = true})
 
 local petMap = {
     ["斯威夫特武士"] = "Swift Samurai",
     ["终极超速小兔"] = "Ultimate Overdrive Bunny",
-    ["金色尾巴"] = "Hyperblast",
-    ["彩虹尾巴"] = "Rainbow Steps",
-    ["龙火"] = "Dragonfire",
+    ["金色轨迹"] = "Hyperblast",
+    ["彩虹轨迹"] = "Rainbow Steps",
+    ["龙火轨迹"] = "Dragonfire",
     ["火焰刺猬"] = "Flaming Hedgehog",
     ["电光雷宠"] = "Electro Golem"
 }
-local petDisplayNames = {"斯威夫特武士", "终极超速小兔", "金色尾巴", "彩虹尾巴", "龙火", "火焰刺猬", "电光雷宠"}
+local petDisplayNames = {"斯威夫特武士", "终极超速小兔", "金色轨迹", "彩虹轨迹", "龙火轨迹", "火焰刺猬", "电光雷宠"}
 
 local BuyPetShop = ""
 
-petShopSection:Paragraph({
-    Title = "提示",
-    Desc = "得有充足的宝石\n购买一个0.4亿左右\n电光雷宠和火焰刺猬只能在太空地区买\n中间三个都是尾迹",
-    ThumbnailSize = 200,
-})
-
 petShopSection:Dropdown({
-    Title = "选择购买的宠物",
+    Title = "选择宠物",
     Values = petDisplayNames,
     Value = "",
     Callback = function(Value)
@@ -1065,7 +1037,7 @@ petShopSection:Toggle({
                             game:GetService("ReplicatedStorage").cPetShopRemote:InvokeServer(pet)
                         end
                     end)
-                    wait(0.2)
+                    wait(0.1)
                 end
             end)
         end
@@ -1083,8 +1055,6 @@ local petEvolveMap = {
 local petEvolveList = {"斯威夫特武士", "火焰刺猬", "电光雷宠", "终极超速小兔"}
 local EvolvePet = ""
 
-Interstellar.evolvepet = false
-
 evolveSection:Dropdown({
     Title = "选择进化的宠物",
     Values = petEvolveList,
@@ -1098,48 +1068,30 @@ evolveSection:Toggle({
     Title = "自动进化",
     Default = false,
     Callback = function(state)
-        Interstellar.evolvepet = state
-        if Interstellar.evolvepet then
+        getgenv().autoEvolve = state
+        if state then
             spawn(function()
-                while Interstellar.evolvepet do
+                while getgenv().autoEvolve do
                     if EvolvePet and EvolvePet ~= "" then
-                        game:GetService("ReplicatedStorage").rEvents.petEvolveEvent:FireServer("evolvePet", EvolvePet)
+                        local args = {"evolvePet", EvolvePet}
+                        game:GetService("ReplicatedStorage").rEvents.petEvolveEvent:FireServer(unpack(args))
                     end
-                    wait()
+                    task.wait(0.1)
                 end
             end)
         end
     end
 })
 
-local infoSection = I:Section({Title = "卡宠建议的重生次数说明", Opened = true})
+local infoSection = I:Section({Title = "卡宠和重生", Opened = true})
 
 infoSection:Paragraph({
     Title = "适合卡宠的重生次数",
-    Desc = "末尾有个奇数9的都行\n建议买个无限等级\n用任何球卡都行\n卡前先适配宠物\n\n重生：9\n重生：19\n重生：29\n重生：39\n重生：49\n重生：59\n重生：69\n重生：79\n重生：89\n重生：99\n重生：109-199\n重生：209-299\n重生：309-399\n重生：409-599\n重生：609-699\n重生：709-799\n重生：809-899\n重生：909-999\n\n后续也就那样",
+    Desc = "末尾有个奇数9的\n买个无限等级\n用任何球卡都行\n卡前先适配宠物\n\n重生：9\n重生：19\n重生：29\n重生：39\n重生：49\n重生：59\n重生：69\n重生：79\n重生：89\n重生：99\n重生：109-199\n重生：209-299\n重生：309-399\n重生：409-599\n重生：609-699\n重生：709-799\n重生：809-899\n重生：909-999\n\n后续也就那样",
     ThumbnailSize = 190,
 })
 
 local settingsSection = J:Section({Title = "画质", Opened = true})
-
-settingsSection:Toggle({
-    Title = "夜视",
-    Default = false,
-    Callback = function(state)
-        local Lighting = game:GetService("Lighting")
-        if state then
-            Lighting.Brightness = 4
-            Lighting.Ambient = Color3.new(1, 1, 1)
-            Lighting.ColorShift_Top = Color3.new(0, 0, 0)
-        else
-            Lighting.Brightness = 1
-            Lighting.Ambient = Color3.new(0, 0, 0)
-            Lighting.ColorShift_Top = Color3.new(0, 0, 0)
-        end
-    end
-})
-
-local otherSection = J:Section({Title = "常用功能", Opened = true})
 
 settingsSection:Button({
     Title = "去雾",
@@ -1149,6 +1101,8 @@ settingsSection:Button({
         Lighting.FogEnd = 3276734343
     end
 })
+
+local otherSection = J:Section({Title = "常用", Opened = true})
 
 otherSection:Toggle({
     Title = "穿墙",
@@ -1183,13 +1137,11 @@ otherSection:Toggle({
     end
 })
 
-otherSection:Divider()
-
 local flySpeed = 150
 local flyMultiplier = 5
 
 otherSection:Slider({
-    Title = "飞行倍速",
+    Title = "飞行速度",
     Step = 0.1,
     Value = {Min = 1, Max = 20, Default = 5},
     Callback = function(multiplier)
@@ -1198,7 +1150,7 @@ otherSection:Slider({
 })
 
 otherSection:Toggle({
-    Title = "飞行开关",
+    Title = "开关",
     Default = false,
     Callback = function(bak)
         getgenv().fly = bak
@@ -1311,13 +1263,6 @@ serverSection:Button({
             TeleportService:Teleport(game.PlaceId, LocalPlayer)
         end
     end
-})
-
-WindUI:Notify({
-    Title = "反挂机",
-    Content = "反挂机已开启",
-    Duration = 3,
-    Icon = "shield-check"
 })
 
 print("Anti Afk On")
