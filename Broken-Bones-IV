@@ -1,0 +1,562 @@
+local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
+local Confirmed = false
+
+local gradientColors = {
+    "rgb(240, 248, 255)",
+    "rgb(224, 240, 255)",
+    "rgb(209, 232, 255)",
+    "rgb(193, 224, 255)",
+    "rgb(178, 216, 255)",
+    "rgb(162, 208, 255)",
+    "rgb(147, 200, 255)",
+    "rgb(131, 192, 255)",
+    "rgb(116, 184, 255)",
+    "rgb(100, 176, 255)"
+}
+
+local username = game.Players.LocalPlayer.Name
+local coloredUsername = ""
+for i = 1, #username do
+    local colorIndex = (i - 1) % #gradientColors + 1
+    coloredUsername = coloredUsername .. '<font color="' .. gradientColors[colorIndex] .. '">' .. username:sub(i, i) .. '</font>'
+end
+
+local version = "v1.2.4"
+local coloredVersion = ""
+for i = 1, #version do
+    local colorIndex = (i - 1) % #gradientColors + 1
+    coloredVersion = coloredVersion .. '<font color="' .. gradientColors[colorIndex] .. '">' .. version:sub(i, i) .. '</font>'
+end
+
+WindUI:Popup({
+    Title = '<font color="' .. gradientColors[1] .. '">甘</font><font color="' .. gradientColors[5] .. '">城</font>',
+    IconThemed = true,
+    Content = "尊敬的用户 " .. coloredUsername .. " \n此脚本完全免费\n源码获取访问脚本链接",
+    Buttons = {
+        {
+            Title = "取消",
+            Callback = function() end,
+            Variant = "Secondary",
+        },
+        {
+            Title = "执行",
+            Icon = "arrow-right",
+            Callback = function() 
+                Confirmed = true
+                createUI()
+            end,
+            Variant = "Primary",
+        }
+    }
+})
+
+function createUI()
+    local Window = WindUI:CreateWindow({
+        Title = '甘城',
+        Icon = "crown",
+        IconThemed = true,
+        Author = "v2.0.0",
+        Folder = "CloudHub",
+        Size = UDim2.fromOffset(580, 440),
+        Transparent = true,
+        Theme = "Dark",
+        HideSearchBar = false,
+        Resizable = true,
+        Background = "https://raw.githubusercontent.com/XxwanhexxX/UN/main/%E7%94%98%E5%9F%8E.png",
+        BackgroundImageTransparency = 0.5,
+        Search = {
+            Enabled = true,
+            Placeholder = "搜索...",
+            Callback = function(searchText)
+                print("搜索功能:", searchText)
+            end
+        },
+        User = {
+            Enabled = true,
+            Callback = function()
+                WindUI:Notify({
+                    Title = "玩家信息",
+                    Content = "玩家名称：" .. game.Players.LocalPlayer.Name,
+                    Duration = 2,
+                    Icon = "user"
+                })
+            end
+        },
+        SideBarWidth = 180
+    })
+Window:CreateTopbarButton("ThemeToggle", "moon", function()
+    local currentTheme = WindUI:GetCurrentTheme()
+    if currentTheme == "Light" then
+        WindUI:SetTheme("Dark")
+        WindUI:Notify({
+            Title = "已切换为光亮黑暗主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:moon"
+        })
+    else
+        WindUI:SetTheme("Light")
+        WindUI:Notify({
+            Title = "已切换为光亮主题",
+            Content = "",
+            Duration = 3,
+            Icon = "geist:sun"
+        })
+    end
+end, 990)
+
+WindUI:SetNotificationLower(true)
+
+Window:Tag({
+        Title = "骨折模拟器",
+        Color = Color3.fromHex("#00ffff") 
+    })
+    
+local tag = Window:Tag({
+    Title = os.date("%H:%M:%S"),
+    Color = Color3.fromHex("#00ffff")
+})
+
+spawn(function()
+    while Window do
+        task.wait(1)
+        tag:SetTitle(os.date("%H:%M:%S"))
+    end
+end)
+
+Window:EditOpenButton({
+    Title = "甘城",
+    Icon = "crown",
+    CornerRadius = UDim.new(0,26),
+    StrokeThickness = 4,
+    Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromHex("ADD8E6")),
+        ColorSequenceKeypoint.new(0.5, Color3.fromHex("4169E1")),
+        ColorSequenceKeypoint.new(1, Color3.fromHex("ADD8E6"))
+    }),
+    Draggable = true,
+})
+
+local LockSection = Window:Section({
+    Title = "主功能",
+    Opened = true,
+})
+
+local function AddTab(section, title, icon)
+    return section:Tab({Title = title, Icon = icon, Opened = true})
+end
+
+local A = AddTab(LockSection, "主要", "house")
+local B = AddTab(LockSection, "通行证", "ticket")
+local C = AddTab(LockSection, "美化", "palette")
+local D = AddTab(LockSection, "通用", "settings")
+local E = AddTab(LockSection, "服务器", "server")
+
+A:Select()
+
+local moneySection = A:Section({Title = "金钱刷取", Opened = true})
+
+moneySection:Paragraph({
+    Title = "重进即可看到效果",
+    ThumbnailSize = 190,
+})
+
+local moneyInput = 0
+
+moneySection:Input({
+    Title = "金钱",
+    Placeholder = "输入数值",
+    Callback = function(value)
+        moneyInput = tonumber(value) or 0
+    end
+})
+
+moneySection:Button({
+    Title = "获取",
+    Callback = function()
+        if moneyInput == 0 then 
+            WindUI:Notify({
+                Title = "金钱",
+                Content = "请输入数值",
+                Duration = 2,
+            })
+            return 
+        end
+        local args = { [1] = "money", [2] = moneyInput }
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer(unpack(args))
+        WindUI:Notify({
+            Title = "金钱",
+            Content = "金钱已增加 " .. moneyInput,
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+local extraSection = A:Section({Title = "等级刷取", Opened = true})
+
+extraSection:Paragraph({
+    Title = "重进即可看到效果",
+    Desc = "增加后无法撤回\n可能导致毁号谨慎使用",
+    ThumbnailSize = 190,
+})
+
+extraSection:Button({
+    Title = "技能冷却等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("cooldownlevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "技能冷却等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+extraSection:Button({
+    Title = "扭伤等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("sprainslevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "扭伤等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+extraSection:Button({
+    Title = "摩擦等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("frictionlevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "摩擦等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+extraSection:Button({
+    Title = "燃料等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("fuellevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "燃料等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+extraSection:Button({
+    Title = "错位等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("dislocationslevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "错位等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+extraSection:Button({
+    Title = "刹车等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("breakslevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "刹车等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+extraSection:Button({
+    Title = "飞行控制等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("flightlevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "飞行等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+extraSection:Divider()
+
+extraSection:Button({
+    Title = "弹跳等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("elasticitylevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "弹跳等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+extraSection:Button({
+    Title = "玩家跳跃等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("jumplevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "跳跃等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+extraSection:Button({
+    Title = "玩家速度等级+100",
+    Callback = function()
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer("speedlevel", 100)
+        WindUI:Notify({
+            Title = "等级",
+            Content = "玩家速度等级已增加100",
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+local raceSection = B:Section({Title = "通行证刷取", Opened = true})
+
+raceSection:Button({
+    Title = "获取重力泡泡通行证",
+    Callback = function()
+        local args = {
+            [1] = "Gravity Bubble",
+            [2] = 5,
+            [3] = true
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer(unpack(args))
+        
+        local args2 = {
+            [1] = "utility",
+            [2] = "Gravity Bubble",
+            [3] = true
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("Functions"):WaitForChild("UpdateStat"):InvokeServer(unpack(args2))
+        
+        WindUI:Notify({
+            Title = "通行证",
+            Content = "重力泡泡已获取",
+            Duration = 2,
+            Icon = "crown"
+        })
+    end
+})
+
+local levelSection = C:Section({Title = "美化", Opened = true})
+
+local levelInput = 0
+
+levelSection:Input({
+    Title = "等级",
+    Placeholder = "输入数值",
+    Callback = function(value)
+        levelInput = tonumber(value) or 0
+    end
+})
+
+levelSection:Button({
+    Title = "点击设置",
+    Callback = function()
+        if levelInput == 0 then
+            WindUI:Notify({
+                Title = "等级",
+                Content = "请输入数值",
+                Duration = 2,
+                Icon = "triangle-alert"
+            })
+            return
+        end
+        local args = { [1] = levelInput }
+        game:GetService("ReplicatedStorage").Functions.UpdateLevel:FireServer(unpack(args))
+        WindUI:Notify({
+            Title = "等级",
+            Content = "等级已设置为 " .. levelInput,
+            Duration = 2,
+            Icon = "check"
+        })
+    end
+})
+
+local otherSection = D:Section({Title = "常用", Opened = true})
+
+otherSection:Toggle({
+    Title = "穿墙",
+    Default = false,
+    Callback = function(state)
+        if state then
+            getgenv().noclipConnection = game:GetService("RunService").Stepped:Connect(function()
+                local LocalPlayer = game:GetService("Players").LocalPlayer
+                if LocalPlayer.Character then
+                    for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                        if part:IsA("BasePart") then
+                            part.CanCollide = false
+                        end
+                    end
+                end
+            end)
+        else
+            if getgenv().noclipConnection then
+                getgenv().noclipConnection:Disconnect()
+                getgenv().noclipConnection = nil
+            end
+            
+            local LocalPlayer = game:GetService("Players").LocalPlayer
+            if LocalPlayer.Character then
+                for _, part in pairs(LocalPlayer.Character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
+                    end
+                end
+            end
+        end
+    end
+})
+
+local flySpeed = 150
+local flyMultiplier = 5
+
+otherSection:Slider({
+    Title = "飞行速度",
+    Step = 0.1,
+    Value = {Min = 1, Max = 10, Default = 5},
+    Callback = function(multiplier)
+        flyMultiplier = multiplier
+    end
+})
+
+otherSection:Toggle({
+    Title = "开关",
+    Default = false,
+    Callback = function(bak)
+        getgenv().fly = bak
+        if bak then
+            local controlModule = require(game.Players.LocalPlayer.PlayerScripts:WaitForChild('PlayerModule'):WaitForChild("ControlModule"))
+            local character = game.Players.LocalPlayer.Character
+            if not character or not character:FindFirstChild("HumanoidRootPart") then return end
+            
+            local function setupFlight(character)
+                local hrp = character:FindFirstChild("HumanoidRootPart")
+                if not hrp then return end
+                
+                if hrp:FindFirstChild("VelocityHandler") then hrp.VelocityHandler:Destroy() end
+                if hrp:FindFirstChild("GyroHandler") then hrp.GyroHandler:Destroy() end
+                
+                local bv = Instance.new("BodyVelocity")
+                bv.Name = "VelocityHandler"
+                bv.Parent = hrp
+                bv.MaxForce = Vector3.new(9e9, 9e9, 9e9)
+                bv.Velocity = Vector3.new(0, 0, 0)
+                
+                local bg = Instance.new("BodyGyro")
+                bg.Name = "GyroHandler"
+                bg.Parent = hrp
+                bg.MaxTorque = Vector3.new(9e9, 9e9, 9e9)
+                bg.P = 1000
+                bg.D = 50
+                
+                return bv, bg
+            end
+            
+            local bv, bg = setupFlight(character)
+            
+            local camera = game.Workspace.CurrentCamera
+            getgenv().FlyLoop = game:GetService("RunService").RenderStepped:Connect(function()
+                local currentCharacter = game.Players.LocalPlayer.Character
+                local hrp = currentCharacter and currentCharacter:FindFirstChild("HumanoidRootPart")
+                if currentCharacter and hrp and hrp:FindFirstChild("VelocityHandler") and hrp:FindFirstChild("GyroHandler") and getgenv().fly then
+                    currentCharacter.Humanoid.PlatformStand = true
+                    hrp.GyroHandler.CFrame = camera.CFrame
+                    
+                    local direction = controlModule:GetMoveVector()
+                    local actualSpeed = flySpeed * flyMultiplier
+                    
+                    hrp.VelocityHandler.Velocity = Vector3.new()
+                    if direction.X ~= 0 then
+                        hrp.VelocityHandler.Velocity = hrp.VelocityHandler.Velocity + camera.CFrame.RightVector * (direction.X * actualSpeed)
+                    end
+                    if direction.Z ~= 0 then
+                        hrp.VelocityHandler.Velocity = hrp.VelocityHandler.Velocity - camera.CFrame.LookVector * (direction.Z * actualSpeed)
+                    end
+                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.Space) then
+                        hrp.VelocityHandler.Velocity = hrp.VelocityHandler.Velocity + Vector3.new(0, actualSpeed/2, 0)
+                    end
+                    if game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftShift) then
+                        hrp.VelocityHandler.Velocity = hrp.VelocityHandler.Velocity - Vector3.new(0, actualSpeed/2, 0)
+                    end
+                end
+            end)
+        else
+            if getgenv().FlyLoop then
+                getgenv().FlyLoop:Disconnect()
+            end
+            local character = game.Players.LocalPlayer.Character
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                local hrp = character.HumanoidRootPart
+                if hrp:FindFirstChild("VelocityHandler") then hrp.VelocityHandler:Destroy() end
+                if hrp:FindFirstChild("GyroHandler") then hrp.GyroHandler:Destroy() end
+                character.Humanoid.PlatformStand = false
+            end
+        end
+    end
+})
+
+local serverSection = E:Section({Title = "服务器", Opened = true})
+
+serverSection:Button({
+    Title = "重进当前服务器",
+    Callback = function()
+        game:GetService("TeleportService"):Teleport(game.PlaceId, game.Players.LocalPlayer)
+    end
+})
+
+serverSection:Button({
+    Title = "切换服务器",
+    Callback = function()
+        local HttpService = game:GetService("HttpService")
+        local TeleportService = game:GetService("TeleportService")
+        local Players = game:GetService("Players")
+        local LocalPlayer = Players.LocalPlayer
+        
+        local request = syn and syn.request or http and http.request or http_request or request or httprequest
+        
+        local success, result = pcall(function()
+            local response = request({
+                Url = "https://games.roblox.com/v1/games/" .. game.PlaceId .. "/servers/Public?limit=100&excludeFullGames=true",
+                Method = "GET"
+            })
+            return HttpService:JSONDecode(response.Body)
+        end)
+        
+        if success and result and result.data and #result.data > 0 then
+            local target = result.data[math.random(1, #result.data)]
+            if target and target.id then
+                TeleportService:TeleportToPlaceInstance(game.PlaceId, target.id, LocalPlayer)
+            else
+                TeleportService:Teleport(game.PlaceId, LocalPlayer)
+            end
+        else
+            TeleportService:Teleport(game.PlaceId, LocalPlayer)
+        end
+    end
+})
+
+end
